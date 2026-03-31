@@ -1,0 +1,11 @@
+package io.github.albinberisha.future.api.domain.enums;
+
+/**
+ * @author Albin Berisha <albin199915@gmail.com>
+ *
+ */
+public enum ProductFilterType {
+	TEXT,
+	NUMBER,
+	COLOR
+}

@@ -1,0 +1,31 @@
+package io.github.albinberisha.future.api.repository;
+
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.data.jpa.repository.EntityGraph;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
+
+import io.github.albinberisha.future.api.domain.Merchant;
+import io.github.albinberisha.future.api.domain.Product;
+import io.github.albinberisha.future.api.repository.custom.CustomProductRepository;
+
+/**
+ * @author Albin Berisha <albin199915@gmail.com>
+ *
+ */
+@Repository
+public interface ProductRepository extends JpaRepository<Product, String>, CustomProductRepository {
+
+	@EntityGraph("Product.withAll")
+	@Query("SELECT p FROM Product p WHERE (:categories IS NULL OR p.category.name IN :categories)")
+	List<Product> findByFilters(@Param("categories") List<String> categories);
+
+	Optional<Product> findByIdAndMerchant(String id, Merchant merchant);
+
+	void deleteByIdAndMerchant(String id, Merchant merchant);
+
+}

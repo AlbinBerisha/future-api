@@ -1,0 +1,92 @@
+package io.github.albinberisha.future.api.controller;
+
+import java.util.List;
+import java.util.Set;
+
+import jakarta.validation.Valid;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import io.github.albinberisha.future.api.domain.ProductCategory;
+import io.github.albinberisha.future.api.domain.ProductFilter;
+import io.github.albinberisha.future.api.dto.PaginatedResponseDto;
+import io.github.albinberisha.future.api.dto.ProductCategoryCreateDto;
+import io.github.albinberisha.future.api.dto.ProductCategoryDto;
+import io.github.albinberisha.future.api.dto.ProductFilterDto;
+import io.github.albinberisha.future.api.exception.ApiException;
+import io.github.albinberisha.future.api.mapper.ObjectMapper;
+import io.github.albinberisha.future.api.service.ProductCategoryService;
+import io.github.albinberisha.future.api.service.ProductFilterService;
+
+/**
+ * @author Albin Berisha <albin199915@gmail.com>
+ *
+ */
+@RequestMapping("/api/product-categories")
+@RestController
+public class ProductCategoryController {
+	@Autowired
+	private ProductCategoryService productCategoryService;
+	@Autowired
+	private ProductFilterService productFilterService;
+	@Autowired
+	private ObjectMapper objectMapper;
+
+	@GetMapping
+	public ResponseEntity<PaginatedResponseDto<ProductCategoryDto>> listProductCategories() {
+		List<ProductCategory> categories = productCategoryService.findAll();
+		PaginatedResponseDto<ProductCategoryDto> response = new PaginatedResponseDto<>();
+		response.setContent(objectMapper.toProductCategoryDtoList(categories));
+		response.setSize(categories.size());
+		return ResponseEntity.ok(response);
+	}
+
+	@PreAuthorize("hasAuthority('CREATE_PRODUCT_CATEGORY')")
+	@PostMapping
+	public ResponseEntity<ProductCategoryDto> createProductCategory(@Valid @RequestBody ProductCategoryCreateDto productCategoryCreateDto) {
+		ProductCategory category = productCategoryService.save(productCategoryCreateDto);
+		return new ResponseEntity<>(objectMapper.toProductCategoryDto(category), HttpStatus.CREATED);
+	}
+
+	@PreAuthorize("hasAuthority('UPDATE_PRODUCT_CATEGORY')")
+	@PutMapping("/{id}")
+	public ResponseEntity<ProductCategoryDto> updateProductCategory(@PathVariable String id, @Valid @RequestBody ProductCategoryDto productCategoryDto) {
+		ProductCategory category = productCategoryService.update(id, productCategoryDto);
+		return ResponseEntity.ok(objectMapper.toProductCategoryDto(category));
+	}
+
+	@PreAuthorize("hasAuthority('DELETE_PRODUCT_CATEGORY')")
+	@DeleteMapping("/{id}")
+	public ResponseEntity<?> deleteProductCategory(@PathVariable String id) {
+		try {
+			productCategoryService.deleteById(id);
+		} catch (EmptyResultDataAccessException e) {
+			throw new ApiException("Product category not found");
+		} catch (DataIntegrityViolationException e) {
+			throw new ApiException("Product category cannot be deleted");
+		}
+		return ResponseEntity.noContent().build();
+	}
+
+	@GetMapping("/{productCategoryId}/product-filters")
+	public ResponseEntity<PaginatedResponseDto<ProductFilterDto>> listProductFilters(@PathVariable String productCategoryId) {
+		Set<ProductFilter> filters = productFilterService.findByProductCategoryId(productCategoryId);
+		PaginatedResponseDto<ProductFilterDto> response = new PaginatedResponseDto<>();
+		response.setContent(objectMapper.toProductFilterDtoList(filters));
+		response.setSize(filters.size());
+		return ResponseEntity.ok(response);
+	}
+}
