@@ -16,10 +16,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import io.github.albinberisha.future.api.domain.ProductFilter;
-import io.github.albinberisha.future.api.dto.ProductFilterCreateDto;
+import io.github.albinberisha.future.api.dto.ProductFilterCreateRequest;
 import io.github.albinberisha.future.api.dto.ProductFilterDto;
-import io.github.albinberisha.future.api.dto.ProductFilterUpdateDto;
+import io.github.albinberisha.future.api.dto.ProductFilterUpdateRequest;
+import io.github.albinberisha.future.api.entity.ProductFilter;
 import io.github.albinberisha.future.api.exception.ApiException;
 import io.github.albinberisha.future.api.mapper.ObjectMapper;
 import io.github.albinberisha.future.api.service.ProductFilterService;
@@ -38,15 +38,15 @@ public class ProductFilterController {
 
 	@PreAuthorize("hasAuthority('UPDATE_PRODUCT_CATEGORY')")
 	@PostMapping
-	public ResponseEntity<ProductFilterDto> createProductFilter(@Valid @RequestBody ProductFilterCreateDto productFilterCreateDto) {
-		ProductFilter productFilter = productFilterService.save(productFilterCreateDto);
+	public ResponseEntity<ProductFilterDto> createProductFilter(@Valid @RequestBody ProductFilterCreateRequest productFilterCreateRequest) {
+		ProductFilter productFilter = productFilterService.save(productFilterCreateRequest);
 		return new ResponseEntity<>(objectMapper.toProductFilterDto(productFilter), HttpStatus.CREATED);
 	}
 
 	@PreAuthorize("hasAuthority('UPDATE_PRODUCT_CATEGORY')")
 	@PutMapping("/{id}")
-	public ResponseEntity<ProductFilterDto> updateProductFilter(@PathVariable String id, @Valid @RequestBody ProductFilterUpdateDto productFilterUpdateDto) {
-		ProductFilter productFilter = productFilterService.update(id, productFilterUpdateDto);
+	public ResponseEntity<ProductFilterDto> updateProductFilter(@PathVariable String id, @Valid @RequestBody ProductFilterUpdateRequest productFilterUpdateRequest) {
+		ProductFilter productFilter = productFilterService.update(id, productFilterUpdateRequest);
 		return ResponseEntity.ok(objectMapper.toProductFilterDto(productFilter));
 	}
 

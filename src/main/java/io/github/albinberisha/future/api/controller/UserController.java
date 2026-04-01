@@ -20,12 +20,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import io.github.albinberisha.future.api.domain.User;
-import io.github.albinberisha.future.api.domain.enums.Scope;
-import io.github.albinberisha.future.api.dto.PaginatedResponseDto;
-import io.github.albinberisha.future.api.dto.UserCreateDto;
+import io.github.albinberisha.future.api.dto.PaginatedResponse;
+import io.github.albinberisha.future.api.dto.UserCreateRequest;
 import io.github.albinberisha.future.api.dto.UserDto;
-import io.github.albinberisha.future.api.dto.UserUpdateDto;
+import io.github.albinberisha.future.api.dto.UserUpdateRequest;
+import io.github.albinberisha.future.api.entity.User;
+import io.github.albinberisha.future.api.entity.enums.Scope;
 import io.github.albinberisha.future.api.exception.ApiException;
 import io.github.albinberisha.future.api.mapper.ObjectMapper;
 import io.github.albinberisha.future.api.service.UserService;
@@ -44,7 +44,7 @@ public class UserController {
 
 	@PreAuthorize("hasAuthority('VIEW_USER')")
 	@GetMapping
-	public ResponseEntity<PaginatedResponseDto<UserDto>> listUsers(Authentication authentication) {
+	public ResponseEntity<PaginatedResponse<UserDto>> listUsers(Authentication authentication) {
 		User authenticatedUser = (User) authentication.getPrincipal();
 		Scope scope = authenticatedUser.getRole().getScope();
 		List<User> users = null;
@@ -52,7 +52,7 @@ public class UserController {
 			users = userService.findAll();
 		else if (scope == Scope.MERCHANT)
 			users = userService.findByMerchant(authenticatedUser.getMerchant());
-		PaginatedResponseDto<UserDto> response = new PaginatedResponseDto<>();
+		PaginatedResponse<UserDto> response = new PaginatedResponse<>();
 		response.setContent(objectMapper.toUserDtoList(users));
 		response.setSize(users.size());
 		return ResponseEntity.ok(response);
@@ -74,18 +74,18 @@ public class UserController {
 
 	@PreAuthorize("hasAuthority('CREATE_USER')")
 	@PostMapping
-	public ResponseEntity<UserDto> createUser(Authentication authentication, @Valid @RequestBody UserCreateDto userCreateDto) {
+	public ResponseEntity<UserDto> createUser(Authentication authentication, @Valid @RequestBody UserCreateRequest userCreateRequest) {
 		User authenticatedUser = (User) authentication.getPrincipal();
 		Scope scope = authenticatedUser.getRole().getScope();
-		User user = userService.save(userCreateDto, scope, authenticatedUser.getMerchant());
+		User user = userService.save(userCreateRequest, scope, authenticatedUser.getMerchant());
 		return new ResponseEntity<>(objectMapper.toUserDto(user), HttpStatus.CREATED);
 	}
 
 	@PreAuthorize("hasAuthority('UPDATE_USER')")
 	@PutMapping("/{id}")
-	public ResponseEntity<UserDto> updateUser(Authentication authentication, @PathVariable String id, @Valid @RequestBody UserUpdateDto userUpdateDto) {
+	public ResponseEntity<UserDto> updateUser(Authentication authentication, @PathVariable String id, @Valid @RequestBody UserUpdateRequest userUpdateRequest) {
 		User authenticatedUser = (User) authentication.getPrincipal();
-		User user = userService.update(id, userUpdateDto, authenticatedUser);
+		User user = userService.update(id, userUpdateRequest, authenticatedUser);
 		return ResponseEntity.ok(objectMapper.toUserDto(user));
 	}
 

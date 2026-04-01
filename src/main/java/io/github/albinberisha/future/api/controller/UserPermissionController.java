@@ -11,10 +11,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import io.github.albinberisha.future.api.domain.User;
-import io.github.albinberisha.future.api.domain.enums.Scope;
-import io.github.albinberisha.future.api.domain.enums.UserPermission;
-import io.github.albinberisha.future.api.dto.PaginatedResponseDto;
+import io.github.albinberisha.future.api.dto.PaginatedResponse;
+import io.github.albinberisha.future.api.entity.User;
+import io.github.albinberisha.future.api.entity.enums.Scope;
+import io.github.albinberisha.future.api.entity.enums.UserPermission;
 
 /**
  * @author Albin Berisha <albin199915@gmail.com>
@@ -25,7 +25,7 @@ import io.github.albinberisha.future.api.dto.PaginatedResponseDto;
 public class UserPermissionController {
 	@PreAuthorize("hasAuthority('VIEW_USER_ROLE')")
 	@GetMapping
-	public ResponseEntity<PaginatedResponseDto<UserPermission>> listUserPermissions(Authentication authentication) {
+	public ResponseEntity<PaginatedResponse<UserPermission>> listUserPermissions(Authentication authentication) {
 		User authenticatedUser = (User) authentication.getPrincipal();
 		Scope scope = authenticatedUser.getRole().getScope();
 		Set<UserPermission> permissions = null;
@@ -33,7 +33,7 @@ public class UserPermissionController {
 			permissions = Stream.of(UserPermission.values()).collect(Collectors.toSet());
 		else if (scope == Scope.MERCHANT)
 			permissions = authenticatedUser.getRole().getPermissions();
-		PaginatedResponseDto<UserPermission> response = new PaginatedResponseDto<>();
+		PaginatedResponse<UserPermission> response = new PaginatedResponse<>();
 		response.setContent(permissions);
 		response.setSize(permissions.size());
 		return ResponseEntity.ok(response);

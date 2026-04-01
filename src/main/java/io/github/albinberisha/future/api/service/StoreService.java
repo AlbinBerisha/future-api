@@ -13,11 +13,12 @@ import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
 
-import io.github.albinberisha.future.api.domain.Merchant;
-import io.github.albinberisha.future.api.domain.Store;
-import io.github.albinberisha.future.api.dto.StoreCreateDto;
-import io.github.albinberisha.future.api.dto.StoreUpdateDto;
+import io.github.albinberisha.future.api.dto.StoreCreateRequest;
+import io.github.albinberisha.future.api.dto.StoreUpdateRequest;
+import io.github.albinberisha.future.api.entity.Merchant;
+import io.github.albinberisha.future.api.entity.Store;
 import io.github.albinberisha.future.api.exception.ApiException;
 import io.github.albinberisha.future.api.mapper.ObjectMapper;
 import io.github.albinberisha.future.api.repository.StoreRepository;
@@ -27,6 +28,7 @@ import io.github.albinberisha.future.api.repository.StoreRepository;
  *
  */
 @Service
+@Validated
 public class StoreService {
 	private static final String STORE_WITH_ALL = "Store.withAll";
 	@Autowired
@@ -38,8 +40,8 @@ public class StoreService {
 		return storeRepository.findById(id, STORE_WITH_ALL);
 	}
 
-	public Store save(@NotNull Merchant merchant, @Valid @NotNull StoreCreateDto storeCreateDto) {
-		Store store = objectMapper.toStore(storeCreateDto);
+	public Store save(@NotNull Merchant merchant, @Valid @NotNull StoreCreateRequest storeCreateRequest) {
+		Store store = objectMapper.toStore(storeCreateRequest);
 		store.setMerchant(merchant);
 		return storeRepository.save(store);
 	}
@@ -50,10 +52,10 @@ public class StoreService {
 	}
 
 	@Transactional
-	public Store update(@NotBlank String id, @Valid @NotNull StoreUpdateDto storeUpdateDto) {
+	public Store update(@NotBlank String id, @Valid @NotNull StoreUpdateRequest storeUpdateRequest) {
 		Store store = storeRepository.findById(id).orElseThrow(() -> new ApiException("Store not found"));
-		store.setName(storeUpdateDto.getName());
-		store.setDescription(storeUpdateDto.getDescription());
+		store.setName(storeUpdateRequest.getName());
+		store.setDescription(storeUpdateRequest.getDescription());
 		return storeRepository.save(store);
 	}
 

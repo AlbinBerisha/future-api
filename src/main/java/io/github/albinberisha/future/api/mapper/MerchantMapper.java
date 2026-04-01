@@ -6,9 +6,9 @@ import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 
-import io.github.albinberisha.future.api.domain.Merchant;
-import io.github.albinberisha.future.api.dto.MerchantCreateDto;
+import io.github.albinberisha.future.api.dto.MerchantCreateRequest;
 import io.github.albinberisha.future.api.dto.MerchantDto;
+import io.github.albinberisha.future.api.entity.Merchant;
 
 /**
  * @author Albin Berisha <albin199915@gmail.com>
@@ -27,7 +27,7 @@ public interface MerchantMapper {
 	@Named("toMerchantDtoSummary")
 	MerchantDto toMerchantDtoSummary(Merchant merchant);
 
-	default Merchant toMerchant(MerchantCreateDto merchantCreateDto) {
+	default Merchant toMerchant(MerchantCreateRequest merchantCreateDto) {
 		Merchant merchant = new Merchant();
 		merchant.setName(merchantCreateDto.getName());
 		merchant.setDescription(merchantCreateDto.getDescription());

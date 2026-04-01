@@ -6,7 +6,6 @@ import java.util.Optional;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import jakarta.validation.constraints.NotBlank;
 
 /**
  * @author Albin Berisha <albin199915@gmail.com>
@@ -18,14 +17,14 @@ public abstract class AbstractBaseCustomRepository<T> implements CustomRepositor
 	protected EntityManager entityManager;
 
 	@Override
-	public List<T> findAll(@NotBlank String entityGraphName) {
+	public List<T> findAll(String entityGraphName) {
 		return entityManager.createQuery("SELECT e FROM " + getEntityClass().getName() + " e", getEntityClass())
 				.setHint(FETCH_GRAPH, entityManager.getEntityGraph(entityGraphName))
 				.getResultList();
 	}
 
 	@Override
-	public Optional<T> findById(@NotBlank String id, @NotBlank String entityGraphName) {
+	public Optional<T> findById(String id, String entityGraphName) {
 		Map<String, Object> hints = Map.of(FETCH_GRAPH, entityManager.getEntityGraph(entityGraphName));
 		return Optional.ofNullable(entityManager.find(getEntityClass(), id, hints));
 	}

@@ -7,9 +7,9 @@ import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 
-import io.github.albinberisha.future.api.domain.User;
-import io.github.albinberisha.future.api.dto.UserCreateDto;
+import io.github.albinberisha.future.api.dto.UserCreateRequest;
 import io.github.albinberisha.future.api.dto.UserDto;
+import io.github.albinberisha.future.api.entity.User;
 
 /**
  * @author Albin Berisha <albin199915@gmail.com>
@@ -31,7 +31,7 @@ public interface UserMapper {
 	@Named("toUserDtoSummary")
 	UserDto toUserDtoSummary(User user);
 
-	default User toUser(UserCreateDto userCreateDto) {
+	default User toUser(UserCreateRequest userCreateDto) {
 		User user = new User();
 		user.setFirstName(userCreateDto.getFirstName());
 		user.setLastName(userCreateDto.getLastName());

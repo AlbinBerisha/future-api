@@ -6,6 +6,7 @@ import java.io.InputStream;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.multipart.MultipartFile;
 
 import io.github.albinberisha.future.api.service.FileStorageService;
@@ -20,6 +21,7 @@ import software.amazon.awssdk.services.s3.model.PutObjectRequest;
  *
  */
 @Service
+@Validated
 public class S3FileStorageService implements FileStorageService {
 	@Autowired
 	private S3Client s3Client;

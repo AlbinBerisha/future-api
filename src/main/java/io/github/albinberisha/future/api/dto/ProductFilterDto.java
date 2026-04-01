@@ -5,7 +5,7 @@ import java.util.Map;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
-import io.github.albinberisha.future.api.domain.enums.ProductFilterType;
+import io.github.albinberisha.future.api.entity.enums.ProductFilterType;
 
 /**
  * @author Albin Berisha <albin1999915@gmail.com>

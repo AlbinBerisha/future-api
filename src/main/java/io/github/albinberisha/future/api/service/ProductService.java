@@ -17,21 +17,22 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
 
-import io.github.albinberisha.future.api.domain.Merchant;
-import io.github.albinberisha.future.api.domain.Product;
-import io.github.albinberisha.future.api.domain.ProductAttribute;
-import io.github.albinberisha.future.api.domain.ProductCategory;
-import io.github.albinberisha.future.api.domain.ProductFilter;
-import io.github.albinberisha.future.api.domain.ProductImage;
-import io.github.albinberisha.future.api.domain.ProductVariant;
-import io.github.albinberisha.future.api.domain.Store;
-import io.github.albinberisha.future.api.domain.embeddable.ProductTranslations;
-import io.github.albinberisha.future.api.domain.enums.Language;
 import io.github.albinberisha.future.api.dto.ProductAttributeDto;
-import io.github.albinberisha.future.api.dto.ProductCreateDto;
-import io.github.albinberisha.future.api.dto.ProductUpdateDto;
-import io.github.albinberisha.future.api.dto.ProductVariantUpdateDto;
+import io.github.albinberisha.future.api.dto.ProductCreateRequest;
+import io.github.albinberisha.future.api.dto.ProductUpdateRequest;
+import io.github.albinberisha.future.api.dto.ProductVariantUpdateRequest;
+import io.github.albinberisha.future.api.entity.Merchant;
+import io.github.albinberisha.future.api.entity.Product;
+import io.github.albinberisha.future.api.entity.ProductAttribute;
+import io.github.albinberisha.future.api.entity.ProductCategory;
+import io.github.albinberisha.future.api.entity.ProductFilter;
+import io.github.albinberisha.future.api.entity.ProductImage;
+import io.github.albinberisha.future.api.entity.ProductVariant;
+import io.github.albinberisha.future.api.entity.Store;
+import io.github.albinberisha.future.api.entity.embeddable.ProductTranslations;
+import io.github.albinberisha.future.api.entity.enums.Language;
 import io.github.albinberisha.future.api.exception.ApiException;
 import io.github.albinberisha.future.api.repository.ProductRepository;
 
@@ -40,6 +41,7 @@ import io.github.albinberisha.future.api.repository.ProductRepository;
  *
  */
 @Service
+@Validated
 public class ProductService {
 	private static final String PRODUCT_WITH_ALL = "Product.withAll";
 	@Autowired
@@ -66,26 +68,26 @@ public class ProductService {
 	}
 
 	@Transactional
-	public Product save(@NotNull Merchant merchant, @NotNull @Valid ProductCreateDto productCreateDto) {
+	public Product save(@NotNull Merchant merchant, @NotNull @Valid ProductCreateRequest productCreateRequest) {
 		Product product = new Product();
-		product.setTranslations(Stream.concat(productCreateDto.getNames().keySet().stream(), productCreateDto.getDescriptions().keySet().stream()).distinct().map(lng -> {
+		product.setTranslations(Stream.concat(productCreateRequest.getNames().keySet().stream(), productCreateRequest.getDescriptions().keySet().stream()).distinct().map(lng -> {
 			ProductTranslations translations = new ProductTranslations();
-			translations.setName(productCreateDto.getNames().get(lng));
-			translations.setDescription(productCreateDto.getDescriptions().get(lng));
+			translations.setName(productCreateRequest.getNames().get(lng));
+			translations.setDescription(productCreateRequest.getDescriptions().get(lng));
 			translations.setLanguage(Language.getByCode(lng));
 			return translations;
 		}).collect(Collectors.toSet()));
-		ProductCategory category = productCategoryService.findById(productCreateDto.getCategoryId())
+		ProductCategory category = productCategoryService.findById(productCreateRequest.getCategoryId())
 				.orElseThrow(() -> new ApiException("Product category not found"));
 		product.setCategory(category);
-		Set<ProductImage> images = productImageService.findByIdIn(productCreateDto.getImageIds());
-		if (images.size() != productCreateDto.getImageIds().size()) {
+		Set<ProductImage> images = productImageService.findByIdIn(productCreateRequest.getImageIds());
+		if (images.size() != productCreateRequest.getImageIds().size()) {
 			throw new ApiException("Some images not found");
 		}
 		images.forEach(img -> img.setProduct(product));
 		product.setImages(images);
 		product.setMerchant(merchant);
-		product.setVariants(productCreateDto.getVariants().stream().map(productVariantDto -> {
+		product.setVariants(productCreateRequest.getVariants().stream().map(productVariantDto -> {
 			ProductVariant variant = new ProductVariant();
 			variant.setProduct(product);
 			variant.setPrice(productVariantDto.getPrice());
@@ -125,10 +127,10 @@ public class ProductService {
 	}
 
 	@Transactional
-	public Product update(@NotBlank String id, @NotNull Merchant merchant, @NotNull @Valid ProductUpdateDto productUpdateDto) {
+	public Product update(@NotBlank String id, @NotNull Merchant merchant, @NotNull @Valid ProductUpdateRequest productUpdateRequest) {
 		Product product = productRepository.findByIdAndMerchant(id, merchant)
 				.orElseThrow(() -> new ApiException("Product not found"));
-		Stream.concat(productUpdateDto.getNames().keySet().stream(), productUpdateDto.getDescriptions().keySet().stream()).distinct().forEach(lng -> {
+		Stream.concat(productUpdateRequest.getNames().keySet().stream(), productUpdateRequest.getDescriptions().keySet().stream()).distinct().forEach(lng -> {
 			ProductTranslations pt = product.getTranslations().stream()
 					.filter(t -> t.getLanguage() == Language.getByCode(lng))
 					.findFirst()
@@ -137,23 +139,23 @@ public class ProductService {
 						newPt.setLanguage(Language.getByCode(lng));
 						return newPt;
 					});
-			pt.setName(productUpdateDto.getNames().get(lng));
-			pt.setDescription(productUpdateDto.getDescriptions().get(lng));
+			pt.setName(productUpdateRequest.getNames().get(lng));
+			pt.setDescription(productUpdateRequest.getDescriptions().get(lng));
 		});
-		if (StringUtils.isNotBlank(productUpdateDto.getCategoryId())) {
-			ProductCategory category = productCategoryService.findById(productUpdateDto.getCategoryId())
+		if (StringUtils.isNotBlank(productUpdateRequest.getCategoryId())) {
+			ProductCategory category = productCategoryService.findById(productUpdateRequest.getCategoryId())
 					.orElseThrow(() -> new ApiException("Product category not found"));
 			product.setCategory(category);
 		}
-		Set<ProductImage> images = productImageService.findByIdIn(productUpdateDto.getImageIds());
-		if (images.size() != productUpdateDto.getImageIds().size()) {
+		Set<ProductImage> images = productImageService.findByIdIn(productUpdateRequest.getImageIds());
+		if (images.size() != productUpdateRequest.getImageIds().size()) {
 			throw new ApiException("Some images not found");
 		}
 		images.forEach(img -> img.setProduct(product));
 		product.setImages(images);
-		if (CollectionUtils.isNotEmpty(productUpdateDto.getVariants())) {
+		if (CollectionUtils.isNotEmpty(productUpdateRequest.getVariants())) {
 			List<ProductVariant> combinedVariants = new ArrayList<>();
-			for (ProductVariantUpdateDto productVariantDto : productUpdateDto.getVariants()) {
+			for (ProductVariantUpdateRequest productVariantDto : productUpdateRequest.getVariants()) {
 				ProductVariant variant = product.getVariants().stream()
 						.filter(v -> StringUtils.equals(v.getId(), productVariantDto.getId()))
 						.findFirst()

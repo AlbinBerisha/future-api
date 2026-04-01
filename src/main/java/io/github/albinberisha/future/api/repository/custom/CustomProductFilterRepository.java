@@ -2,7 +2,7 @@ package io.github.albinberisha.future.api.repository.custom;
 
 import java.util.Set;
 
-import io.github.albinberisha.future.api.domain.ProductFilter;
+import io.github.albinberisha.future.api.entity.ProductFilter;
 
 /**
  * @author Albin Berisha <albin199915@gmail.com>

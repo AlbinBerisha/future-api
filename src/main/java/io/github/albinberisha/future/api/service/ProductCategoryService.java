@@ -14,14 +14,15 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
 
-import io.github.albinberisha.future.api.domain.ProductCategory;
-import io.github.albinberisha.future.api.domain.ProductFilter;
-import io.github.albinberisha.future.api.domain.embeddable.ProductCategoryTranslations;
-import io.github.albinberisha.future.api.domain.embeddable.ProductFilterTranslations;
-import io.github.albinberisha.future.api.domain.enums.Language;
-import io.github.albinberisha.future.api.dto.ProductCategoryCreateDto;
+import io.github.albinberisha.future.api.dto.ProductCategoryCreateRequest;
 import io.github.albinberisha.future.api.dto.ProductCategoryDto;
+import io.github.albinberisha.future.api.entity.ProductCategory;
+import io.github.albinberisha.future.api.entity.ProductFilter;
+import io.github.albinberisha.future.api.entity.embeddable.ProductCategoryTranslations;
+import io.github.albinberisha.future.api.entity.embeddable.ProductFilterTranslations;
+import io.github.albinberisha.future.api.entity.enums.Language;
 import io.github.albinberisha.future.api.exception.ApiException;
 import io.github.albinberisha.future.api.repository.ProductCategoryRepository;
 
@@ -30,6 +31,7 @@ import io.github.albinberisha.future.api.repository.ProductCategoryRepository;
  *
  */
 @Service
+@Validated
 public class ProductCategoryService {
 	private static final String PRODUCT_CATEGORY_WITH_ALL = "ProductCategory.withAll";
 	@Autowired
@@ -47,10 +49,10 @@ public class ProductCategoryService {
 		return productCategoryRepository.findByName(name, PRODUCT_CATEGORY_WITH_ALL);
 	}
 
-	public ProductCategory save(@Valid @NotNull ProductCategoryCreateDto productCategoryCreateDto) {
+	public ProductCategory save(@Valid @NotNull ProductCategoryCreateRequest productCategoryCreateRequest) {
 		ProductCategory category = new ProductCategory();
 		category.setId(UUID.randomUUID().toString());
-		category.setTranslations(productCategoryCreateDto.getNames().entrySet().stream().filter(entry -> StringUtils.isNotBlank(entry.getValue())).map(name -> {
+		category.setTranslations(productCategoryCreateRequest.getNames().entrySet().stream().filter(entry -> StringUtils.isNotBlank(entry.getValue())).map(name -> {
 			ProductCategoryTranslations pct = new ProductCategoryTranslations();
 			Language language = Language.getByCode(name.getKey());
 			pct.setLanguage(language);
@@ -59,8 +61,8 @@ public class ProductCategoryService {
 				category.setName(name.getValue());
 			return pct;
 		}).collect(Collectors.toSet()));
-		if (productCategoryCreateDto.getFilters() != null) {
-			category.setFilters(productCategoryCreateDto.getFilters().stream().map(productFilterDto -> {
+		if (productCategoryCreateRequest.getFilters() != null) {
+			category.setFilters(productCategoryCreateRequest.getFilters().stream().map(productFilterDto -> {
 				ProductFilter productFilter = new ProductFilter();
 				productFilter.setId(UUID.randomUUID().toString());
 				productFilter.setTranslations(productFilterDto.getNames().entrySet().stream().filter(entry -> StringUtils.isNotBlank(entry.getValue())).map(name -> {
@@ -74,7 +76,7 @@ public class ProductCategoryService {
 				return productFilter;
 			}).collect(Collectors.toSet()));
 		}
-		ProductCategory parentCategory = Optional.ofNullable(productCategoryCreateDto.getParentCategoryId())
+		ProductCategory parentCategory = Optional.ofNullable(productCategoryCreateRequest.getParentCategoryId())
 				.filter(StringUtils::isNotBlank)
 				.map(productCategoryId -> productCategoryRepository.findById(productCategoryId)
 						.orElseThrow(() -> new ApiException("Parent product category not found")))
@@ -87,16 +89,16 @@ public class ProductCategoryService {
 		productCategoryRepository.deleteById(id);
 	}
 
-	public ProductCategory update(@NotBlank String id, @Valid @NotNull ProductCategoryDto productCategoryDto) {
+	public ProductCategory update(@NotBlank String id, @Valid @NotNull ProductCategoryDto productCategoryRequest) {
 		ProductCategory category = productCategoryRepository.findById(id).orElseThrow(() -> new ApiException("Product category not found"));
-		category.setTranslations(productCategoryDto.getNames().entrySet().stream().filter(entry -> StringUtils.isNotBlank(entry.getValue())).map(name -> {
+		category.setTranslations(productCategoryRequest.getNames().entrySet().stream().filter(entry -> StringUtils.isNotBlank(entry.getValue())).map(name -> {
 			ProductCategoryTranslations pct = new ProductCategoryTranslations();
 			pct.setLanguage(Language.getByCode(name.getKey()));
 			pct.setName(name.getValue());
 			return pct;
 		}).collect(Collectors.toSet()));
-		if (productCategoryDto.getFilters() != null) {
-			category.setFilters(productCategoryDto.getFilters().stream().map(productFilterDto -> {
+		if (productCategoryRequest.getFilters() != null) {
+			category.setFilters(productCategoryRequest.getFilters().stream().map(productFilterDto -> {
 				ProductFilter productFilter = new ProductFilter();
 				productFilter.setId(UUID.randomUUID().toString());
 				productFilter.setTranslations(productFilterDto.getNames().entrySet().stream().filter(entry -> StringUtils.isNotBlank(entry.getValue())).map(name -> {

@@ -7,9 +7,9 @@ import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 
-import io.github.albinberisha.future.api.domain.Store;
-import io.github.albinberisha.future.api.dto.StoreCreateDto;
+import io.github.albinberisha.future.api.dto.StoreCreateRequest;
 import io.github.albinberisha.future.api.dto.StoreDto;
+import io.github.albinberisha.future.api.entity.Store;
 
 /**
  * @author Albin Berisha <albin199915@gmail.com>
@@ -28,13 +28,13 @@ public interface StoreMapper {
 	@Named("toStoreDtoSummary")
 	StoreDto toStoreDtoSummary(Store store);
 
-	default Store toStore(StoreCreateDto dto) {
+	default Store toStore(StoreCreateRequest dto) {
 		Store store = new Store();
 		store.setName(dto.getName());
 		store.setDescription(dto.getDescription());
 		return store;
 	}
 
-	Set<Store> toStoreSet(Collection<StoreCreateDto> stores);
+	Set<Store> toStoreSet(Collection<StoreCreateRequest> stores);
 
 }

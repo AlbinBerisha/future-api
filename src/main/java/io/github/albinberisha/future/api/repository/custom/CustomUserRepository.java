@@ -3,8 +3,8 @@ package io.github.albinberisha.future.api.repository.custom;
 import java.util.List;
 import java.util.Optional;
 
-import io.github.albinberisha.future.api.domain.Merchant;
-import io.github.albinberisha.future.api.domain.User;
+import io.github.albinberisha.future.api.entity.Merchant;
+import io.github.albinberisha.future.api.entity.User;
 
 /**
  * @author Albin Berisha <albin199915@gmail.com>

@@ -17,11 +17,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import io.github.albinberisha.future.api.domain.Merchant;
-import io.github.albinberisha.future.api.dto.MerchantCreateDto;
+import io.github.albinberisha.future.api.dto.MerchantCreateRequest;
 import io.github.albinberisha.future.api.dto.MerchantDto;
-import io.github.albinberisha.future.api.dto.MerchantUpdateDto;
-import io.github.albinberisha.future.api.dto.PaginatedResponseDto;
+import io.github.albinberisha.future.api.dto.MerchantUpdateRequest;
+import io.github.albinberisha.future.api.dto.PaginatedResponse;
+import io.github.albinberisha.future.api.entity.Merchant;
 import io.github.albinberisha.future.api.exception.ApiException;
 import io.github.albinberisha.future.api.mapper.ObjectMapper;
 import io.github.albinberisha.future.api.service.MerchantService;
@@ -41,9 +41,9 @@ public class MerchantController {
 
 	@PreAuthorize("hasAuthority('VIEW_MERCHANT')")
 	@GetMapping
-	public ResponseEntity<PaginatedResponseDto<MerchantDto>> listMerchants() {
+	public ResponseEntity<PaginatedResponse<MerchantDto>> listMerchants() {
 		List<Merchant> merchants = merchantService.findAll();
-		PaginatedResponseDto<MerchantDto> response = new PaginatedResponseDto<>();
+		PaginatedResponse<MerchantDto> response = new PaginatedResponse<>();
 		response.setContent(objectMapper.toMerchantDtoList(merchants));
 		response.setSize(merchants.size());
 		return ResponseEntity.ok(response);
@@ -58,15 +58,15 @@ public class MerchantController {
 
 	@PreAuthorize("hasAuthority('CREATE_MERCHANT')")
 	@PostMapping
-	public ResponseEntity<MerchantDto> createMerchant(@Valid @RequestBody MerchantCreateDto merchantCreateDto) {
-		Merchant merchant = merchantService.save(merchantCreateDto);
+	public ResponseEntity<MerchantDto> createMerchant(@Valid @RequestBody MerchantCreateRequest merchantCreateRequest) {
+		Merchant merchant = merchantService.save(merchantCreateRequest);
 		return new ResponseEntity<>(objectMapper.toMerchantDto(merchant), HttpStatus.CREATED);
 	}
 
 	@PreAuthorize("hasAuthority('UPDATE_MERCHANT')")
 	@PutMapping("/{id}")
-	public ResponseEntity<?> updateMerchant(@PathVariable String id, @Valid @RequestBody MerchantUpdateDto merchantUpdateDto) {
-		merchantService.update(id, merchantUpdateDto);
+	public ResponseEntity<?> updateMerchant(@PathVariable String id, @Valid @RequestBody MerchantUpdateRequest merchantUpdateRequest) {
+		merchantService.update(id, merchantUpdateRequest);
 		return ResponseEntity.ok().build();
 	}
 

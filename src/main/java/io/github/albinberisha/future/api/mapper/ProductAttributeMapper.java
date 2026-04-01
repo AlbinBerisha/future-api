@@ -4,8 +4,8 @@ import java.util.Collection;
 
 import org.mapstruct.Mapping;
 
-import io.github.albinberisha.future.api.domain.ProductAttribute;
 import io.github.albinberisha.future.api.dto.ProductAttributeDto;
+import io.github.albinberisha.future.api.entity.ProductAttribute;
 
 /**
  * @author Albin Berisha <albin199915@gmail.com>

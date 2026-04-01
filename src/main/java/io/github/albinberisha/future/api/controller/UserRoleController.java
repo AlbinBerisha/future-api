@@ -22,13 +22,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import io.github.albinberisha.future.api.domain.User;
-import io.github.albinberisha.future.api.domain.UserRole;
-import io.github.albinberisha.future.api.domain.enums.Scope;
-import io.github.albinberisha.future.api.dto.PaginatedResponseDto;
-import io.github.albinberisha.future.api.dto.UserRoleCreationDto;
+import io.github.albinberisha.future.api.dto.PaginatedResponse;
+import io.github.albinberisha.future.api.dto.UserRoleCreateRequest;
 import io.github.albinberisha.future.api.dto.UserRoleDto;
-import io.github.albinberisha.future.api.dto.UserRoleUpdatingDto;
+import io.github.albinberisha.future.api.dto.UserRoleUpdateRequest;
+import io.github.albinberisha.future.api.entity.User;
+import io.github.albinberisha.future.api.entity.UserRole;
+import io.github.albinberisha.future.api.entity.enums.Scope;
 import io.github.albinberisha.future.api.exception.ApiException;
 import io.github.albinberisha.future.api.mapper.ObjectMapper;
 import io.github.albinberisha.future.api.service.UserRoleService;
@@ -47,7 +47,7 @@ public class UserRoleController {
 
 	@PreAuthorize("hasAuthority('VIEW_USER_ROLE')")
 	@GetMapping
-	public ResponseEntity<PaginatedResponseDto<UserRoleDto>> listUserRoles(Authentication authentication, @RequestParam(required = false) Scope scope) {
+	public ResponseEntity<PaginatedResponse<UserRoleDto>> listUserRoles(Authentication authentication, @RequestParam(required = false) Scope scope) {
 		User authenticatedUser = (User) authentication.getPrincipal();
 		if (authenticatedUser.getRole().getScope() == Scope.MERCHANT && scope == Scope.SYSTEM)
 			throw new AuthorizationServiceException("Not authorized");
@@ -56,7 +56,7 @@ public class UserRoleController {
 			roles = userRoleService.findByMerchantAndScope(authenticatedUser.getMerchant(), Scope.MERCHANT);
 		else if (authenticatedUser.getRole().getScope() == Scope.SYSTEM)
 			roles = scope == null ? userRoleService.findByMerchant(null) : userRoleService.findByMerchantAndScope(null, scope);
-		PaginatedResponseDto<UserRoleDto> response = new PaginatedResponseDto<>();
+		PaginatedResponse<UserRoleDto> response = new PaginatedResponse<>();
 		response.setContent(objectMapper.toUserRoleDtoList(roles));
 		response.setSize(roles.size());
 		return ResponseEntity.ok(response);
@@ -73,17 +73,17 @@ public class UserRoleController {
 
 	@PreAuthorize("hasAuthority('CREATE_USER_ROLE')")
 	@PostMapping
-	public ResponseEntity<UserRoleDto> createUserRole(Authentication authentication, @Valid @RequestBody UserRoleCreationDto userRoleCreationDto) {
+	public ResponseEntity<UserRoleDto> createUserRole(Authentication authentication, @Valid @RequestBody UserRoleCreateRequest userRoleCreationRequest) {
 		User authenticatedUser = (User) authentication.getPrincipal();
-		UserRole role = userRoleService.save(authenticatedUser.getMerchant(), userRoleCreationDto);
+		UserRole role = userRoleService.save(authenticatedUser.getMerchant(), userRoleCreationRequest);
 		return new ResponseEntity<>(objectMapper.toUserRoleDto(role), HttpStatus.CREATED);
 	}
 
 	@PreAuthorize("hasAuthority('UPDATE_USER_ROLE')")
 	@PutMapping("/{id}")
-	public ResponseEntity<?> updateUserRole(Authentication authentication, @PathVariable String id, @Valid @RequestBody UserRoleUpdatingDto userRoleUpdatingDto) {
+	public ResponseEntity<?> updateUserRole(Authentication authentication, @PathVariable String id, @Valid @RequestBody UserRoleUpdateRequest userRoleUpdatingRequest) {
 		User authenticatedUser = (User) authentication.getPrincipal();
-		userRoleService.update(id, authenticatedUser.getMerchant(), userRoleUpdatingDto);
+		userRoleService.update(id, authenticatedUser.getMerchant(), userRoleUpdatingRequest);
 		return ResponseEntity.ok().build();
 	}
 

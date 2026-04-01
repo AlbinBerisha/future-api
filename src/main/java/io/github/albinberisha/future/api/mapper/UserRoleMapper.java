@@ -2,8 +2,8 @@ package io.github.albinberisha.future.api.mapper;
 
 import java.util.List;
 
-import io.github.albinberisha.future.api.domain.UserRole;
 import io.github.albinberisha.future.api.dto.UserRoleDto;
+import io.github.albinberisha.future.api.entity.UserRole;
 
 /**
  * @author Albin Berisha <albin199915@gmail.com>

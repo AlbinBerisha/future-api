@@ -8,9 +8,10 @@ import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.multipart.MultipartFile;
 
-import io.github.albinberisha.future.api.domain.ProductImage;
+import io.github.albinberisha.future.api.entity.ProductImage;
 import io.github.albinberisha.future.api.exception.ApiException;
 import io.github.albinberisha.future.api.repository.ProductImageRepository;
 import jakarta.validation.constraints.NotBlank;
@@ -22,6 +23,7 @@ import jakarta.validation.constraints.NotNull;
  *
  */
 @Service
+@Validated
 public class ProductImageService {
 	@Autowired
 	private ProductImageRepository productImageRepository;

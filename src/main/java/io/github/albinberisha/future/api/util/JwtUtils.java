@@ -1,6 +1,6 @@
 package io.github.albinberisha.future.api.util;
 
-import io.github.albinberisha.future.api.domain.User;
+import io.github.albinberisha.future.api.entity.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 

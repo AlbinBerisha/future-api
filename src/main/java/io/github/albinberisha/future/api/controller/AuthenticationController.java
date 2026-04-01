@@ -18,9 +18,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import io.github.albinberisha.future.api.domain.User;
-import io.github.albinberisha.future.api.dto.AuthenticationRequestDto;
-import io.github.albinberisha.future.api.dto.AuthenticationResponseDto;
+import io.github.albinberisha.future.api.dto.AuthenticationRequest;
+import io.github.albinberisha.future.api.dto.AuthenticationResponse;
+import io.github.albinberisha.future.api.entity.User;
 import io.github.albinberisha.future.api.exception.ApiException;
 import io.github.albinberisha.future.api.mapper.ObjectMapper;
 import io.github.albinberisha.future.api.service.UserService;
@@ -42,7 +42,7 @@ public class AuthenticationController {
 	private ObjectMapper objectMapper;
 
 	@PostMapping("/api/auth")
-	public ResponseEntity<AuthenticationResponseDto> authenticate(@Valid @RequestBody AuthenticationRequestDto request, HttpServletResponse response) {
+	public ResponseEntity<AuthenticationResponse> authenticate(@Valid @RequestBody AuthenticationRequest request, HttpServletResponse response) {
 		try {
 			Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
 			User user = (User) authentication.getPrincipal();
@@ -54,7 +54,7 @@ public class AuthenticationController {
 			refreshTokenCookie.setMaxAge(7 * 24 * 60 * 60);
 			refreshTokenCookie.setAttribute("SameSite", "None");
 			response.addCookie(refreshTokenCookie);
-			AuthenticationResponseDto responseDto = new AuthenticationResponseDto();
+			AuthenticationResponse responseDto = new AuthenticationResponse();
 			responseDto.setJwt(jwt);
 			responseDto.setUser(objectMapper.toUserDto(user));
 			return ResponseEntity.ok(responseDto);
@@ -66,14 +66,14 @@ public class AuthenticationController {
 	}
 
 	@GetMapping("/api/auth/refresh")
-	public ResponseEntity<AuthenticationResponseDto> refreshToken(@CookieValue(required = false) String refreshToken) {
+	public ResponseEntity<AuthenticationResponse> refreshToken(@CookieValue(required = false) String refreshToken) {
 		if (StringUtils.isBlank(refreshToken) || !jwtUtils.canTokenBeRefreshed(refreshToken))
 			throw new ApiException("No active session");
 		String username = jwtUtils.getUsernameFromToken(refreshToken);
 		User user = userService.findByUsername(username)
 				.orElseThrow(() -> new ApiException("User not found"));
 		String jwt = jwtUtils.generateAccessToken(user);
-		AuthenticationResponseDto responseDto = new AuthenticationResponseDto();
+		AuthenticationResponse responseDto = new AuthenticationResponse();
 		responseDto.setJwt(jwt);
 		responseDto.setUser(objectMapper.toUserDto(user));
 		return ResponseEntity.ok(responseDto);

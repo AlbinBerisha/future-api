@@ -12,13 +12,14 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
 
-import io.github.albinberisha.future.api.domain.Merchant;
-import io.github.albinberisha.future.api.domain.User;
-import io.github.albinberisha.future.api.domain.UserRole;
-import io.github.albinberisha.future.api.domain.enums.Scope;
-import io.github.albinberisha.future.api.dto.UserCreateDto;
-import io.github.albinberisha.future.api.dto.UserUpdateDto;
+import io.github.albinberisha.future.api.dto.UserCreateRequest;
+import io.github.albinberisha.future.api.dto.UserUpdateRequest;
+import io.github.albinberisha.future.api.entity.Merchant;
+import io.github.albinberisha.future.api.entity.User;
+import io.github.albinberisha.future.api.entity.UserRole;
+import io.github.albinberisha.future.api.entity.enums.Scope;
 import io.github.albinberisha.future.api.exception.ApiException;
 import io.github.albinberisha.future.api.mapper.ObjectMapper;
 import io.github.albinberisha.future.api.repository.UserRepository;
@@ -28,6 +29,7 @@ import io.github.albinberisha.future.api.repository.UserRepository;
  *
  */
 @Service
+@Validated
 public class UserService {
 	private static final String USER_WITH_ALL = "User.withAll";
 	@Autowired
@@ -50,9 +52,9 @@ public class UserService {
 	}
 
 	@Transactional
-	public User save(@Valid @NotNull UserCreateDto userCreateDto, Scope scope, Merchant merchant) {
-		User user = objectMapper.toUser(userCreateDto);
-		UserRole role = userRoleService.findById(userCreateDto.getRoleId())
+	public User save(@Valid @NotNull UserCreateRequest userCreateRequest, Scope scope, Merchant merchant) {
+		User user = objectMapper.toUser(userCreateRequest);
+		UserRole role = userRoleService.findById(userCreateRequest.getRoleId())
 				.orElseThrow(() -> new ApiException("User role not found"));
 		user.setRole(role);
 		if (scope == Scope.MERCHANT)
@@ -61,7 +63,7 @@ public class UserService {
 	}
 
 	@Transactional
-	public User update(String id, @Valid UserUpdateDto userUpdateDto, User authenticatedUser) {
+	public User update(String id, @Valid UserUpdateRequest userUpdateRequest, User authenticatedUser) {
 		User user = null;
 		if (authenticatedUser.getRole().getScope() == Scope.SYSTEM)
 			user = userRepository.findById(id)
@@ -71,23 +73,23 @@ public class UserService {
 					.orElseThrow(() -> new ApiException("User not found"));
 		else
 			throw new ApiException("Operation out of user scope");
-		if (StringUtils.isNotBlank(userUpdateDto.getEmail()))
-			user.setEmail(userUpdateDto.getEmail());
-		if (StringUtils.isNotBlank(userUpdateDto.getUsername()))
-			user.setUsername(userUpdateDto.getUsername());
-		if (StringUtils.isNotBlank(userUpdateDto.getPassword()))
-			user.setPassword(userUpdateDto.getPassword());
-		if (StringUtils.isNotBlank(userUpdateDto.getFirstName()))
-			user.setFirstName(userUpdateDto.getFirstName());
-		if (StringUtils.isNotBlank(userUpdateDto.getLastName()))
-			user.setLastName(userUpdateDto.getLastName());
-		if (StringUtils.isNotBlank(userUpdateDto.getRoleId())) {
-			UserRole role = userRoleService.findById(userUpdateDto.getRoleId())
+		if (StringUtils.isNotBlank(userUpdateRequest.getEmail()))
+			user.setEmail(userUpdateRequest.getEmail());
+		if (StringUtils.isNotBlank(userUpdateRequest.getUsername()))
+			user.setUsername(userUpdateRequest.getUsername());
+		if (StringUtils.isNotBlank(userUpdateRequest.getPassword()))
+			user.setPassword(userUpdateRequest.getPassword());
+		if (StringUtils.isNotBlank(userUpdateRequest.getFirstName()))
+			user.setFirstName(userUpdateRequest.getFirstName());
+		if (StringUtils.isNotBlank(userUpdateRequest.getLastName()))
+			user.setLastName(userUpdateRequest.getLastName());
+		if (StringUtils.isNotBlank(userUpdateRequest.getRoleId())) {
+			UserRole role = userRoleService.findById(userUpdateRequest.getRoleId())
 					.orElseThrow(() -> new ApiException("User role not found"));
 			user.setRole(role);
 		}
-		if (userUpdateDto.getEnabled() != null)
-			user.setEnabled(BooleanUtils.isNotFalse(userUpdateDto.getEnabled()));
+		if (userUpdateRequest.getEnabled() != null)
+			user.setEnabled(BooleanUtils.isNotFalse(userUpdateRequest.getEnabled()));
 		return userRepository.save(user);
 	}
 

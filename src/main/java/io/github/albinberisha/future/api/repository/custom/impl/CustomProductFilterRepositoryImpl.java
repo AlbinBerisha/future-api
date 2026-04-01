@@ -5,7 +5,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.transaction.annotation.Transactional;
 
-import io.github.albinberisha.future.api.domain.ProductFilter;
+import io.github.albinberisha.future.api.entity.ProductFilter;
 import io.github.albinberisha.future.api.repository.custom.AbstractBaseCustomRepository;
 import io.github.albinberisha.future.api.repository.custom.CustomProductFilterRepository;
 

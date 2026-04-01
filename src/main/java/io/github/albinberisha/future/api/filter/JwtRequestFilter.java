@@ -14,7 +14,7 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import io.github.albinberisha.future.api.domain.User;
+import io.github.albinberisha.future.api.entity.User;
 import io.github.albinberisha.future.api.exception.ApiException;
 import io.github.albinberisha.future.api.service.UserService;
 import io.github.albinberisha.future.api.util.JwtUtils;

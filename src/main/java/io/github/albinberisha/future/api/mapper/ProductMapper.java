@@ -9,9 +9,9 @@ import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 
-import io.github.albinberisha.future.api.domain.Product;
-import io.github.albinberisha.future.api.domain.embeddable.ProductTranslations;
 import io.github.albinberisha.future.api.dto.ProductDto;
+import io.github.albinberisha.future.api.entity.Product;
+import io.github.albinberisha.future.api.entity.embeddable.ProductTranslations;
 
 /**
  * @author Albin Berisha <albin199915@gmail.com>

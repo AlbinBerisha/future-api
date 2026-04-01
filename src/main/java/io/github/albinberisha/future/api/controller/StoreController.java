@@ -20,12 +20,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import io.github.albinberisha.future.api.domain.Store;
-import io.github.albinberisha.future.api.domain.User;
-import io.github.albinberisha.future.api.dto.PaginatedResponseDto;
-import io.github.albinberisha.future.api.dto.StoreCreateDto;
+import io.github.albinberisha.future.api.dto.PaginatedResponse;
+import io.github.albinberisha.future.api.dto.StoreCreateRequest;
 import io.github.albinberisha.future.api.dto.StoreDto;
-import io.github.albinberisha.future.api.dto.StoreUpdateDto;
+import io.github.albinberisha.future.api.dto.StoreUpdateRequest;
+import io.github.albinberisha.future.api.entity.Store;
+import io.github.albinberisha.future.api.entity.User;
 import io.github.albinberisha.future.api.exception.ApiException;
 import io.github.albinberisha.future.api.mapper.ObjectMapper;
 import io.github.albinberisha.future.api.service.StoreService;
@@ -44,10 +44,10 @@ public class StoreController {
 
 	@PreAuthorize("hasAuthority('VIEW_STORE')")
 	@GetMapping
-	public ResponseEntity<PaginatedResponseDto<StoreDto>> listStores(Authentication auth) {
+	public ResponseEntity<PaginatedResponse<StoreDto>> listStores(Authentication auth) {
 		User authorizedUser = (User) auth.getPrincipal();
 		List<Store> stores = storeService.findByMerchant(authorizedUser.getMerchant());
-		PaginatedResponseDto<StoreDto> response = new PaginatedResponseDto<>();
+		PaginatedResponse<StoreDto> response = new PaginatedResponse<>();
 		response.setContent(objectMapper.toStoreDtoCollection(stores));
 		response.setSize(stores.size());
 		return ResponseEntity.ok(response);
@@ -62,16 +62,16 @@ public class StoreController {
 
 	@PreAuthorize("hasAuthority('CREATE_STORE')")
 	@PostMapping
-	public ResponseEntity<StoreDto> createStore(Authentication auth, @Valid @RequestBody StoreCreateDto storeCreateDto) {
+	public ResponseEntity<StoreDto> createStore(Authentication auth, @Valid @RequestBody StoreCreateRequest storeCreateRequest) {
 		User authUser = (User) auth.getPrincipal();
-		Store store = storeService.save(authUser.getMerchant(), storeCreateDto);
+		Store store = storeService.save(authUser.getMerchant(), storeCreateRequest);
 		return new ResponseEntity<>(objectMapper.toStoreDto(store), HttpStatus.CREATED);
 	}
 
 	@PreAuthorize("hasAuthority('UPDATE_STORE')")
 	@PutMapping("/{id}")
-	public ResponseEntity<?> updateStore(@PathVariable String id, @Valid @RequestBody StoreUpdateDto storeUpdateDto) {
-		storeService.update(id, storeUpdateDto);
+	public ResponseEntity<?> updateStore(@PathVariable String id, @Valid @RequestBody StoreUpdateRequest storeUpdateRequest) {
+		storeService.update(id, storeUpdateRequest);
 		return ResponseEntity.ok().build();
 	}
 

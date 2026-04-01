@@ -20,12 +20,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import io.github.albinberisha.future.api.domain.ProductCategory;
-import io.github.albinberisha.future.api.domain.ProductFilter;
-import io.github.albinberisha.future.api.dto.PaginatedResponseDto;
-import io.github.albinberisha.future.api.dto.ProductCategoryCreateDto;
+import io.github.albinberisha.future.api.dto.PaginatedResponse;
+import io.github.albinberisha.future.api.dto.ProductCategoryCreateRequest;
 import io.github.albinberisha.future.api.dto.ProductCategoryDto;
 import io.github.albinberisha.future.api.dto.ProductFilterDto;
+import io.github.albinberisha.future.api.entity.ProductCategory;
+import io.github.albinberisha.future.api.entity.ProductFilter;
 import io.github.albinberisha.future.api.exception.ApiException;
 import io.github.albinberisha.future.api.mapper.ObjectMapper;
 import io.github.albinberisha.future.api.service.ProductCategoryService;
@@ -46,9 +46,9 @@ public class ProductCategoryController {
 	private ObjectMapper objectMapper;
 
 	@GetMapping
-	public ResponseEntity<PaginatedResponseDto<ProductCategoryDto>> listProductCategories() {
+	public ResponseEntity<PaginatedResponse<ProductCategoryDto>> listProductCategories() {
 		List<ProductCategory> categories = productCategoryService.findAll();
-		PaginatedResponseDto<ProductCategoryDto> response = new PaginatedResponseDto<>();
+		PaginatedResponse<ProductCategoryDto> response = new PaginatedResponse<>();
 		response.setContent(objectMapper.toProductCategoryDtoList(categories));
 		response.setSize(categories.size());
 		return ResponseEntity.ok(response);
@@ -56,8 +56,8 @@ public class ProductCategoryController {
 
 	@PreAuthorize("hasAuthority('CREATE_PRODUCT_CATEGORY')")
 	@PostMapping
-	public ResponseEntity<ProductCategoryDto> createProductCategory(@Valid @RequestBody ProductCategoryCreateDto productCategoryCreateDto) {
-		ProductCategory category = productCategoryService.save(productCategoryCreateDto);
+	public ResponseEntity<ProductCategoryDto> createProductCategory(@Valid @RequestBody ProductCategoryCreateRequest productCategoryCreateRequest) {
+		ProductCategory category = productCategoryService.save(productCategoryCreateRequest);
 		return new ResponseEntity<>(objectMapper.toProductCategoryDto(category), HttpStatus.CREATED);
 	}
 
@@ -82,9 +82,9 @@ public class ProductCategoryController {
 	}
 
 	@GetMapping("/{productCategoryId}/product-filters")
-	public ResponseEntity<PaginatedResponseDto<ProductFilterDto>> listProductFilters(@PathVariable String productCategoryId) {
+	public ResponseEntity<PaginatedResponse<ProductFilterDto>> listProductFilters(@PathVariable String productCategoryId) {
 		Set<ProductFilter> filters = productFilterService.findByProductCategoryId(productCategoryId);
-		PaginatedResponseDto<ProductFilterDto> response = new PaginatedResponseDto<>();
+		PaginatedResponse<ProductFilterDto> response = new PaginatedResponse<>();
 		response.setContent(objectMapper.toProductFilterDtoList(filters));
 		response.setSize(filters.size());
 		return ResponseEntity.ok(response);

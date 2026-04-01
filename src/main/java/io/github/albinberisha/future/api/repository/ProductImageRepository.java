@@ -6,7 +6,7 @@ import java.util.Set;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import io.github.albinberisha.future.api.domain.ProductImage;
+import io.github.albinberisha.future.api.entity.ProductImage;
 
 /**
  * @author Albin Berisha <albin199915@gmail.com>

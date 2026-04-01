@@ -23,15 +23,15 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import io.github.albinberisha.future.api.domain.Product;
-import io.github.albinberisha.future.api.domain.ProductCategory;
-import io.github.albinberisha.future.api.domain.ProductImage;
-import io.github.albinberisha.future.api.domain.User;
-import io.github.albinberisha.future.api.domain.enums.Scope;
-import io.github.albinberisha.future.api.dto.PaginatedResponseDto;
-import io.github.albinberisha.future.api.dto.ProductCreateDto;
+import io.github.albinberisha.future.api.dto.PaginatedResponse;
+import io.github.albinberisha.future.api.dto.ProductCreateRequest;
 import io.github.albinberisha.future.api.dto.ProductDto;
-import io.github.albinberisha.future.api.dto.ProductUpdateDto;
+import io.github.albinberisha.future.api.dto.ProductUpdateRequest;
+import io.github.albinberisha.future.api.entity.Product;
+import io.github.albinberisha.future.api.entity.ProductCategory;
+import io.github.albinberisha.future.api.entity.ProductImage;
+import io.github.albinberisha.future.api.entity.User;
+import io.github.albinberisha.future.api.entity.enums.Scope;
 import io.github.albinberisha.future.api.exception.ApiException;
 import io.github.albinberisha.future.api.mapper.ObjectMapper;
 import io.github.albinberisha.future.api.service.ProductCategoryService;
@@ -55,16 +55,16 @@ public class ProductController {
 	private ObjectMapper objectMapper;
 
 	@GetMapping("/home")
-	public ResponseEntity<PaginatedResponseDto<ProductDto>> homeProducts() {
+	public ResponseEntity<PaginatedResponse<ProductDto>> homeProducts() {
 		List<Product> products = productService.findAll();
-		PaginatedResponseDto<ProductDto> response = new PaginatedResponseDto<>();
+		PaginatedResponse<ProductDto> response = new PaginatedResponse<>();
 		response.setContent(objectMapper.toProductDtoList(products));
 		response.setSize(products.size());
 		return ResponseEntity.ok(response);
 	}
 
 	@GetMapping
-	public ResponseEntity<PaginatedResponseDto<ProductDto>> listProducts(Authentication authentication,
+	public ResponseEntity<PaginatedResponse<ProductDto>> listProducts(Authentication authentication,
 			@RequestParam(required = false, name = "category") String categoryName) {
 		List<Product> products = null;
 		if (authentication == null) {
@@ -80,7 +80,7 @@ public class ProductController {
 			else if (scope == Scope.MERCHANT)
 				products = productService.findByMerchant(authenticatedUser.getMerchant());
 		}
-		PaginatedResponseDto<ProductDto> response = new PaginatedResponseDto<>();
+		PaginatedResponse<ProductDto> response = new PaginatedResponse<>();
 		response.setContent(objectMapper.toProductDtoList(products));
 		response.setSize(products.size());
 		return ResponseEntity.ok(response);
@@ -97,17 +97,17 @@ public class ProductController {
 
 	@PreAuthorize("hasAuthority('CREATE_PRODUCT')")
 	@PostMapping
-	public ResponseEntity<ProductDto> createProduct(Authentication authentication, @Valid @RequestBody ProductCreateDto productCreateDto) {
+	public ResponseEntity<ProductDto> createProduct(Authentication authentication, @Valid @RequestBody ProductCreateRequest productCreateRequest) {
 		User authenticatedUser = (User) authentication.getPrincipal();
-		Product product = productService.save(authenticatedUser.getMerchant(), productCreateDto);
+		Product product = productService.save(authenticatedUser.getMerchant(), productCreateRequest);
 		return new ResponseEntity<>(objectMapper.toProductDto(product), HttpStatus.CREATED);
 	}
 
 	@PreAuthorize("hasAuthority('UPDATE_PRODUCT')")
 	@PutMapping("/{id}")
-	public ResponseEntity<?> updateProduct(Authentication authentication, @PathVariable String id, @Valid @RequestBody ProductUpdateDto productUpdateDto) {
+	public ResponseEntity<?> updateProduct(Authentication authentication, @PathVariable String id, @Valid @RequestBody ProductUpdateRequest productUpdateRequest) {
 		User authenticatedUser = (User) authentication.getPrincipal();
-		productService.update(id, authenticatedUser.getMerchant(), productUpdateDto);
+		productService.update(id, authenticatedUser.getMerchant(), productUpdateRequest);
 		return ResponseEntity.ok().build();
 	}
 
