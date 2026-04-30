@@ -5,8 +5,6 @@ import java.util.List;
 import jakarta.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -78,14 +76,8 @@ public class StoreController {
 	@PreAuthorize("hasAuthority('DELETE_STORE')")
 	@DeleteMapping("/{id}")
 	public ResponseEntity<?> deleteStore(Authentication auth, @PathVariable String id) {
-		try {
-			User authUser = (User) auth.getPrincipal();
-			storeService.deleteByIdAndMerchant(id, authUser.getMerchant());
-			return ResponseEntity.noContent().build();
-		} catch (EmptyResultDataAccessException e) {
-			throw new ApiException("Store not found");
-		} catch (DataIntegrityViolationException e) {
-			throw new ApiException("Store cannot be deleted");
-		}
+		User authUser = (User) auth.getPrincipal();
+		storeService.deleteByIdAndMerchant(id, authUser.getMerchant());
+		return ResponseEntity.noContent().build();
 	}
 }

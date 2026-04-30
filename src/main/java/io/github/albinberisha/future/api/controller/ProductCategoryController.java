@@ -6,8 +6,6 @@ import java.util.Set;
 import jakarta.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -26,7 +24,6 @@ import io.github.albinberisha.future.api.dto.ProductCategoryDto;
 import io.github.albinberisha.future.api.dto.ProductFilterDto;
 import io.github.albinberisha.future.api.entity.ProductCategory;
 import io.github.albinberisha.future.api.entity.ProductFilter;
-import io.github.albinberisha.future.api.exception.ApiException;
 import io.github.albinberisha.future.api.mapper.ObjectMapper;
 import io.github.albinberisha.future.api.service.ProductCategoryService;
 import io.github.albinberisha.future.api.service.ProductFilterService;
@@ -71,13 +68,7 @@ public class ProductCategoryController {
 	@PreAuthorize("hasAuthority('DELETE_PRODUCT_CATEGORY')")
 	@DeleteMapping("/{id}")
 	public ResponseEntity<?> deleteProductCategory(@PathVariable String id) {
-		try {
-			productCategoryService.deleteById(id);
-		} catch (EmptyResultDataAccessException e) {
-			throw new ApiException("Product category not found");
-		} catch (DataIntegrityViolationException e) {
-			throw new ApiException("Product category cannot be deleted");
-		}
+		productCategoryService.deleteById(id);
 		return ResponseEntity.noContent().build();
 	}
 

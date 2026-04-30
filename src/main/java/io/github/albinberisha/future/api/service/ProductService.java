@@ -81,9 +81,9 @@ public class ProductService {
 				.orElseThrow(() -> new ApiException("Product category not found"));
 		product.setCategory(category);
 		Set<ProductImage> images = productImageService.findByIdIn(productCreateRequest.getImageIds());
-		if (images.size() != productCreateRequest.getImageIds().size()) {
-			throw new ApiException("Some images not found");
-		}
+//		if (images.size() != productCreateRequest.getImageIds().size()) {
+//			throw new ApiException("Some images not found");
+//		}
 		images.forEach(img -> img.setProduct(product));
 		product.setImages(images);
 		product.setMerchant(merchant);
@@ -93,10 +93,10 @@ public class ProductService {
 			variant.setPrice(productVariantDto.getPrice());
 			variant.setStockQuantity(productVariantDto.getStockQuantity());
 			Set<ProductImage> variantImages = productImageService.findByIdIn(productVariantDto.getImageIds());
-			if (variantImages.size() != productVariantDto.getImageIds().size()) {
-				throw new ApiException("Some images not found");
-			}
-			variantImages.forEach(img -> img.setProductVariant(variant));
+//			if (variantImages.size() != productVariantDto.getImageIds().size()) {
+//				throw new ApiException("Some images not found");
+//			}
+//			variantImages.forEach(img -> img.setProductVariant(variant));
 			variant.setImages(variantImages);
 			variant.setAttributes(productVariantDto.getAttributes().stream().map(productAttributeDto -> {
 				ProductAttribute attribute = new ProductAttribute();
@@ -148,9 +148,9 @@ public class ProductService {
 			product.setCategory(category);
 		}
 		Set<ProductImage> images = productImageService.findByIdIn(productUpdateRequest.getImageIds());
-		if (images.size() != productUpdateRequest.getImageIds().size()) {
-			throw new ApiException("Some images not found");
-		}
+//		if (images.size() != productUpdateRequest.getImageIds().size()) {
+//			throw new ApiException("Some images not found");
+//		}
 		images.forEach(img -> img.setProduct(product));
 		product.setImages(images);
 		if (CollectionUtils.isNotEmpty(productUpdateRequest.getVariants())) {
@@ -168,9 +168,9 @@ public class ProductService {
 				variant.setPrice(productVariantDto.getPrice());
 				variant.setStockQuantity(productVariantDto.getStockQuantity());
 				Set<ProductImage> variantImages = productImageService.findByIdIn(productVariantDto.getImageIds());
-				if (variantImages.size() != productVariantDto.getImageIds().size()) {
-					throw new ApiException("Some images not found");
-				}
+//				if (variantImages.size() != productVariantDto.getImageIds().size()) {
+//					throw new ApiException("Some images not found");
+//				}
 				variantImages.forEach(img -> img.setProductVariant(variant));
 				variant.setImages(variantImages);
 				List<ProductAttribute> combinedAttributes = new ArrayList<>();

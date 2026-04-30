@@ -37,7 +37,7 @@ public class CustomUserRoleRepositoryImpl extends AbstractBaseCustomRepository<U
 
 	@Override
 	public Optional<UserRole> findByIdAndMerchant(String id, Merchant merchant, String entityGraphName) {
-		return entityManager.createQuery("SELECT ur FROM UserRole ur WHERE ur.id = :id AND ur.merchant = :merchant", UserRole.class)
+		return entityManager.createQuery("SELECT ur FROM UserRole ur WHERE ur.id = :id AND ((:merchant IS NULL AND ur.merchant IS NULL) OR ur.merchant = :merchant)", UserRole.class)
 				.setParameter("id", id)
 				.setParameter("merchant", merchant)
 				.setHint(FETCH_GRAPH, entityManager.getEntityGraph(entityGraphName))

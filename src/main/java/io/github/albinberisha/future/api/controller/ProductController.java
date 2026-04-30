@@ -7,7 +7,6 @@ import jakarta.validation.Valid;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -26,6 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
 import io.github.albinberisha.future.api.dto.PaginatedResponse;
 import io.github.albinberisha.future.api.dto.ProductCreateRequest;
 import io.github.albinberisha.future.api.dto.ProductDto;
+import io.github.albinberisha.future.api.dto.ProductImageDto;
 import io.github.albinberisha.future.api.dto.ProductUpdateRequest;
 import io.github.albinberisha.future.api.entity.Product;
 import io.github.albinberisha.future.api.entity.ProductCategory;
@@ -115,19 +115,16 @@ public class ProductController {
 	@DeleteMapping("/{id}")
 	public ResponseEntity<?> deleteProduct(Authentication authentication, @PathVariable String id) {
 		User authenticatedUser = (User) authentication.getPrincipal();
-		try {
-			productService.deleteByIdAndMerchant(id, authenticatedUser.getMerchant());
-		} catch (EmptyResultDataAccessException e) {
-			throw new ApiException("Product not found");
-		}
+		productService.deleteByIdAndMerchant(id, authenticatedUser.getMerchant());
 		return ResponseEntity.noContent().build();
 	}
 
 	@PreAuthorize("hasAuthority('UPDATE_PRODUCT')")
 	@PostMapping("/images")
 	public ResponseEntity<?> uploadImage(@RequestParam MultipartFile image) {
-		ProductImage productImage = productImageService.save(image);
-		return new ResponseEntity<>(objectMapper.toProductImageDto(productImage), HttpStatus.CREATED);
+//		ProductImage productImage = productImageService.save(image);
+		return new ResponseEntity<>(new ProductImageDto(), HttpStatus.CREATED);
+//		return new ResponseEntity<>(objectMapper.toProductImageDto(productImage), HttpStatus.CREATED);
 	}
 
 	private static List<String> prepareFilterCategories(ProductCategory category) {

@@ -8,8 +8,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.CookieValue;
@@ -43,26 +41,20 @@ public class AuthenticationController {
 
 	@PostMapping("/api/auth")
 	public ResponseEntity<AuthenticationResponse> authenticate(@Valid @RequestBody AuthenticationRequest request, HttpServletResponse response) {
-		try {
-			Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
-			User user = (User) authentication.getPrincipal();
-			String jwt = jwtUtils.generateAccessToken(user);
-			String refreshToken = jwtUtils.generateRefreshToken(user);
-			Cookie refreshTokenCookie = new Cookie("refreshToken", refreshToken);
-			refreshTokenCookie.setHttpOnly(true);
-			refreshTokenCookie.setSecure(true);
-			refreshTokenCookie.setMaxAge(7 * 24 * 60 * 60);
-			refreshTokenCookie.setAttribute("SameSite", "None");
-			response.addCookie(refreshTokenCookie);
-			AuthenticationResponse responseDto = new AuthenticationResponse();
-			responseDto.setJwt(jwt);
-			responseDto.setUser(objectMapper.toUserDto(user));
-			return ResponseEntity.ok(responseDto);
-		} catch (BadCredentialsException e) {
-			throw new ApiException("Wrong username or password");
-		} catch (DisabledException e) {
-			throw new ApiException("User is disabled");
-		}
+		Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
+		User user = (User) authentication.getPrincipal();
+		String jwt = jwtUtils.generateAccessToken(user);
+		String refreshToken = jwtUtils.generateRefreshToken(user);
+		Cookie refreshTokenCookie = new Cookie("refreshToken", refreshToken);
+		refreshTokenCookie.setHttpOnly(true);
+		refreshTokenCookie.setSecure(true);
+		refreshTokenCookie.setMaxAge(7 * 24 * 60 * 60);
+		refreshTokenCookie.setAttribute("SameSite", "None");
+		response.addCookie(refreshTokenCookie);
+		AuthenticationResponse responseDto = new AuthenticationResponse();
+		responseDto.setJwt(jwt);
+		responseDto.setUser(objectMapper.toUserDto(user));
+		return ResponseEntity.ok(responseDto);
 	}
 
 	@GetMapping("/api/auth/refresh")

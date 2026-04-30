@@ -3,8 +3,6 @@ package io.github.albinberisha.future.api.controller;
 import jakarta.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -20,7 +18,6 @@ import io.github.albinberisha.future.api.dto.ProductFilterCreateRequest;
 import io.github.albinberisha.future.api.dto.ProductFilterDto;
 import io.github.albinberisha.future.api.dto.ProductFilterUpdateRequest;
 import io.github.albinberisha.future.api.entity.ProductFilter;
-import io.github.albinberisha.future.api.exception.ApiException;
 import io.github.albinberisha.future.api.mapper.ObjectMapper;
 import io.github.albinberisha.future.api.service.ProductFilterService;
 
@@ -53,13 +50,7 @@ public class ProductFilterController {
 	@PreAuthorize("hasAuthority('UPDATE_PRODUCT_CATEGORY')")
 	@DeleteMapping("/{id}")
 	public ResponseEntity<?> deleteProductFilter(@PathVariable String id) {
-		try {
-			productFilterService.deleteById(id);
-			return ResponseEntity.noContent().build();
-		} catch (EmptyResultDataAccessException e) {
-			throw new ApiException("Filter not found");
-		} catch (DataIntegrityViolationException e) {
-			throw new ApiException("Filter cannot be deleted");
-		}
+		productFilterService.deleteById(id);
+		return ResponseEntity.noContent().build();
 	}
 }

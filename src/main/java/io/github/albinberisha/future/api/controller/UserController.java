@@ -5,8 +5,6 @@ import java.util.List;
 import jakarta.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -96,16 +94,10 @@ public class UserController {
 		if (authenticatedUser.getId().equals(id))
 			throw new ApiException("User cannot be deleted");
 		Scope scope = authenticatedUser.getRole().getScope();
-		try {
-			if (scope == Scope.SYSTEM)
-				userService.deleteById(id);
-			else if (scope == Scope.MERCHANT)
-				userService.deleteByMerchantAndId(authenticatedUser.getMerchant(), id);
-			return ResponseEntity.noContent().build();
-		} catch (EmptyResultDataAccessException e) {
-			throw new ApiException("User not found");
-		} catch (DataIntegrityViolationException e) {
-			throw new ApiException("User cannot be deleted");
-		}
+		if (scope == Scope.SYSTEM)
+			userService.deleteById(id);
+		else if (scope == Scope.MERCHANT)
+			userService.deleteByMerchantAndId(authenticatedUser.getMerchant(), id);
+		return ResponseEntity.noContent().build();
 	}
 }

@@ -5,8 +5,6 @@ import java.util.List;
 import jakarta.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AuthorizationServiceException;
@@ -91,13 +89,7 @@ public class UserRoleController {
 	@DeleteMapping("/{id}")
 	public ResponseEntity<?> deleteUserRole(Authentication authentication, @PathVariable String id) {
 		User authenticatedUser = (User) authentication.getPrincipal();
-		try {
-			userRoleService.deleteByIdAndMerchant(id, authenticatedUser.getMerchant());
-		} catch (EmptyResultDataAccessException e) {
-			throw new ApiException("User role not found");
-		} catch (DataIntegrityViolationException e) {
-			throw new ApiException("User role cannot be deleted");
-		}
+		userRoleService.deleteByIdAndMerchant(id, authenticatedUser.getMerchant());
 		return ResponseEntity.noContent().build();
 	}
 }

@@ -3,8 +3,6 @@ package io.github.albinberisha.future.api.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -73,13 +71,7 @@ public class MerchantController {
 	@PreAuthorize("hasAuthority('DELETE_MERCHANT')")
 	@DeleteMapping("/{id}")
 	public ResponseEntity<?> deleteMerchant(@PathVariable String id) {
-		try {
-			merchantService.deleteById(id);
-			return ResponseEntity.noContent().build();
-		} catch (EmptyResultDataAccessException e) {
-			throw new ApiException("Merchant not found");
-		} catch (DataIntegrityViolationException e) {
-			throw new ApiException("Merchant cannot be deleted");
-		}
+		merchantService.deleteById(id);
+		return ResponseEntity.noContent().build();
 	}
 }
