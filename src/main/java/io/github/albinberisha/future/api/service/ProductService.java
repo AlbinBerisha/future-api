@@ -14,6 +14,7 @@ import jakarta.validation.constraints.NotNull;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,10 +29,10 @@ import io.github.albinberisha.future.api.entity.Product;
 import io.github.albinberisha.future.api.entity.ProductAttribute;
 import io.github.albinberisha.future.api.entity.ProductCategory;
 import io.github.albinberisha.future.api.entity.ProductFilter;
-import io.github.albinberisha.future.api.entity.ProductImage;
 import io.github.albinberisha.future.api.entity.ProductVariant;
 import io.github.albinberisha.future.api.entity.Store;
 import io.github.albinberisha.future.api.entity.embeddable.ProductTranslations;
+import io.github.albinberisha.future.api.entity.enums.ResourceOwnerType;
 import io.github.albinberisha.future.api.entity.enums.Language;
 import io.github.albinberisha.future.api.exception.ApiException;
 import io.github.albinberisha.future.api.repository.ProductRepository;
@@ -51,7 +52,7 @@ public class ProductService {
 	@Autowired
 	private ProductFilterService productFilterService;
 	@Autowired
-	private ProductImageService productImageService;
+	private FileResourceService fileResourceService;
 	@Autowired
 	private StoreService storeService;
 
@@ -80,24 +81,12 @@ public class ProductService {
 		ProductCategory category = productCategoryService.findById(productCreateRequest.getCategoryId())
 				.orElseThrow(() -> new ApiException("Product category not found"));
 		product.setCategory(category);
-		Set<ProductImage> images = productImageService.findByIdIn(productCreateRequest.getImageIds());
-//		if (images.size() != productCreateRequest.getImageIds().size()) {
-//			throw new ApiException("Some images not found");
-//		}
-		images.forEach(img -> img.setProduct(product));
-		product.setImages(images);
 		product.setMerchant(merchant);
-		product.setVariants(productCreateRequest.getVariants().stream().map(productVariantDto -> {
+		List<ProductVariant> variantList = productCreateRequest.getVariants().stream().map(productVariantDto -> {
 			ProductVariant variant = new ProductVariant();
 			variant.setProduct(product);
 			variant.setPrice(productVariantDto.getPrice());
 			variant.setStockQuantity(productVariantDto.getStockQuantity());
-			Set<ProductImage> variantImages = productImageService.findByIdIn(productVariantDto.getImageIds());
-//			if (variantImages.size() != productVariantDto.getImageIds().size()) {
-//				throw new ApiException("Some images not found");
-//			}
-//			variantImages.forEach(img -> img.setProductVariant(variant));
-			variant.setImages(variantImages);
 			variant.setAttributes(productVariantDto.getAttributes().stream().map(productAttributeDto -> {
 				ProductAttribute attribute = new ProductAttribute();
 				attribute.setId(UUID.randomUUID().toString());
@@ -113,8 +102,22 @@ public class ProductService {
 				throw new ApiException("Some stores not found");
 			variant.setStores(stores);
 			return variant;
-		}).collect(Collectors.toSet()));
-		return productRepository.save(product);
+		}).toList();
+		product.setVariants(new java.util.LinkedHashSet<>(variantList));
+		Product savedProduct = productRepository.save(product);
+
+		if (CollectionUtils.isNotEmpty(productCreateRequest.getImageIds())) {
+			fileResourceService.linkToOwner(productCreateRequest.getImageIds(), ResourceOwnerType.PRODUCT, savedProduct.getId());
+		}
+		List<ProductVariant> savedVariants = new ArrayList<>(savedProduct.getVariants());
+		for (int i = 0; i < productCreateRequest.getVariants().size(); i++) {
+			var productVariantDto = productCreateRequest.getVariants().stream().toList().get(i);
+			if (CollectionUtils.isNotEmpty(productVariantDto.getImageIds()) && i < savedVariants.size()) {
+				fileResourceService.linkToOwner(productVariantDto.getImageIds(), ResourceOwnerType.PRODUCT_VARIANT, savedVariants.get(i).getId());
+			}
+		}
+
+		return savedProduct;
 	}
 
 	public List<Product> findByMerchant(@NotNull Merchant merchant) {
@@ -147,17 +150,14 @@ public class ProductService {
 					.orElseThrow(() -> new ApiException("Product category not found"));
 			product.setCategory(category);
 		}
-		Set<ProductImage> images = productImageService.findByIdIn(productUpdateRequest.getImageIds());
-//		if (images.size() != productUpdateRequest.getImageIds().size()) {
-//			throw new ApiException("Some images not found");
-//		}
-		images.forEach(img -> img.setProduct(product));
-		product.setImages(images);
+		if (CollectionUtils.isNotEmpty(productUpdateRequest.getImageIds())) {
+			fileResourceService.linkToOwner(productUpdateRequest.getImageIds(), ResourceOwnerType.PRODUCT, product.getId());
+		}
 		if (CollectionUtils.isNotEmpty(productUpdateRequest.getVariants())) {
 			List<ProductVariant> combinedVariants = new ArrayList<>();
 			for (ProductVariantUpdateRequest productVariantDto : productUpdateRequest.getVariants()) {
 				ProductVariant variant = product.getVariants().stream()
-						.filter(v -> StringUtils.equals(v.getId(), productVariantDto.getId()))
+						.filter(v -> Strings.CS.equals(v.getId(), productVariantDto.getId()))
 						.findFirst()
 						.orElseGet(() -> {
 							ProductVariant newProductVariant = new ProductVariant();
@@ -167,16 +167,13 @@ public class ProductService {
 				combinedVariants.add(variant);
 				variant.setPrice(productVariantDto.getPrice());
 				variant.setStockQuantity(productVariantDto.getStockQuantity());
-				Set<ProductImage> variantImages = productImageService.findByIdIn(productVariantDto.getImageIds());
-//				if (variantImages.size() != productVariantDto.getImageIds().size()) {
-//					throw new ApiException("Some images not found");
-//				}
-				variantImages.forEach(img -> img.setProductVariant(variant));
-				variant.setImages(variantImages);
+				if (CollectionUtils.isNotEmpty(productVariantDto.getImageIds())) {
+					fileResourceService.linkToOwner(productVariantDto.getImageIds(), ResourceOwnerType.PRODUCT_VARIANT, variant.getId());
+				}
 				List<ProductAttribute> combinedAttributes = new ArrayList<>();
 				for (ProductAttributeDto productAttributeDto : productVariantDto.getAttributes()) {
 					ProductAttribute attribute = variant.getAttributes().stream()
-							.filter(a -> StringUtils.equals(a.getId(), productAttributeDto.getId()))
+							.filter(a -> Strings.CS.equals(a.getId(), productAttributeDto.getId()))
 							.findFirst()
 							.orElseGet(() -> {
 								ProductAttribute newProductAttribute = new ProductAttribute();

@@ -16,7 +16,7 @@ public class ProductVariantDto {
 	private Collection<ProductAttributeDto> attributes;
 	private BigDecimal price;
 	private Integer stockQuantity;
-	private Collection<ProductImageDto> images;
+	private Collection<FileResourceDto> images;
 	private Collection<StoreDto> stores;
 
 	public String getId() {
@@ -51,11 +51,11 @@ public class ProductVariantDto {
 		this.stockQuantity = stockQuantity;
 	}
 
-	public Collection<ProductImageDto> getImages() {
+	public Collection<FileResourceDto> getImages() {
 		return images;
 	}
 
-	public void setImages(Collection<ProductImageDto> images) {
+	public void setImages(Collection<FileResourceDto> images) {
 		this.images = images;
 	}
 

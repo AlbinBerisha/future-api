@@ -16,7 +16,7 @@ public class ProductDto {
 	private Map<String, String> names;
 	private Map<String, String> descriptions;
 	private ProductCategoryDto category;
-	private Collection<ProductImageDto> images;
+	private Collection<FileResourceDto> images;
 	private Double rating;
 	private Collection<ProductVariantDto> variants;
 
@@ -52,11 +52,11 @@ public class ProductDto {
 		this.category = category;
 	}
 
-	public Collection<ProductImageDto> getImages() {
+	public Collection<FileResourceDto> getImages() {
 		return images;
 	}
 
-	public void setImages(Collection<ProductImageDto> images) {
+	public void setImages(Collection<FileResourceDto> images) {
 		this.images = images;
 	}
 

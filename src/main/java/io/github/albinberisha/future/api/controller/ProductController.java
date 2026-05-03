@@ -20,22 +20,21 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 
 import io.github.albinberisha.future.api.dto.PaginatedResponse;
 import io.github.albinberisha.future.api.dto.ProductCreateRequest;
 import io.github.albinberisha.future.api.dto.ProductDto;
-import io.github.albinberisha.future.api.dto.ProductImageDto;
 import io.github.albinberisha.future.api.dto.ProductUpdateRequest;
+import io.github.albinberisha.future.api.dto.ProductVariantDto;
 import io.github.albinberisha.future.api.entity.Product;
 import io.github.albinberisha.future.api.entity.ProductCategory;
-import io.github.albinberisha.future.api.entity.ProductImage;
 import io.github.albinberisha.future.api.entity.User;
+import io.github.albinberisha.future.api.entity.enums.ResourceOwnerType;
 import io.github.albinberisha.future.api.entity.enums.Scope;
 import io.github.albinberisha.future.api.exception.ApiException;
 import io.github.albinberisha.future.api.mapper.ObjectMapper;
+import io.github.albinberisha.future.api.service.FileResourceService;
 import io.github.albinberisha.future.api.service.ProductCategoryService;
-import io.github.albinberisha.future.api.service.ProductImageService;
 import io.github.albinberisha.future.api.service.ProductService;
 
 /**
@@ -48,18 +47,19 @@ public class ProductController {
 	@Autowired
 	private ProductService productService;
 	@Autowired
-	private ProductImageService productImageService;
-	@Autowired
 	private ProductCategoryService productCategoryService;
+	@Autowired
+	private FileResourceService fileResourceService;
 	@Autowired
 	private ObjectMapper objectMapper;
 
 	@GetMapping("/home")
 	public ResponseEntity<PaginatedResponse<ProductDto>> homeProducts() {
 		List<Product> products = productService.findAll();
+		List<ProductDto> dtos = products.stream().map(this::enrichProductDto).toList();
 		PaginatedResponse<ProductDto> response = new PaginatedResponse<>();
-		response.setContent(objectMapper.toProductDtoList(products));
-		response.setSize(products.size());
+		response.setContent(dtos);
+		response.setSize(dtos.size());
 		return ResponseEntity.ok(response);
 	}
 
@@ -80,9 +80,10 @@ public class ProductController {
 			else if (scope == Scope.MERCHANT)
 				products = productService.findByMerchant(authenticatedUser.getMerchant());
 		}
+		List<ProductDto> dtos = products.stream().map(this::enrichProductDto).toList();
 		PaginatedResponse<ProductDto> response = new PaginatedResponse<>();
-		response.setContent(objectMapper.toProductDtoList(products));
-		response.setSize(products.size());
+		response.setContent(dtos);
+		response.setSize(dtos.size());
 		return ResponseEntity.ok(response);
 	}
 
@@ -90,9 +91,7 @@ public class ProductController {
 	public ResponseEntity<ProductDto> getProduct(@PathVariable String id) {
 		Product product = productService.findById(id)
 				.orElseThrow(() -> new ApiException("Product not found"));
-		if (product == null)
-			throw new ApiException("Product not found");
-		return ResponseEntity.ok(objectMapper.toProductDto(product));
+		return ResponseEntity.ok(enrichProductDto(product));
 	}
 
 	@PreAuthorize("hasAuthority('CREATE_PRODUCT')")
@@ -100,7 +99,7 @@ public class ProductController {
 	public ResponseEntity<ProductDto> createProduct(Authentication authentication, @Valid @RequestBody ProductCreateRequest productCreateRequest) {
 		User authenticatedUser = (User) authentication.getPrincipal();
 		Product product = productService.save(authenticatedUser.getMerchant(), productCreateRequest);
-		return new ResponseEntity<>(objectMapper.toProductDto(product), HttpStatus.CREATED);
+		return new ResponseEntity<>(enrichProductDto(product), HttpStatus.CREATED);
 	}
 
 	@PreAuthorize("hasAuthority('UPDATE_PRODUCT')")
@@ -119,12 +118,17 @@ public class ProductController {
 		return ResponseEntity.noContent().build();
 	}
 
-	@PreAuthorize("hasAuthority('UPDATE_PRODUCT')")
-	@PostMapping("/images")
-	public ResponseEntity<?> uploadImage(@RequestParam MultipartFile image) {
-//		ProductImage productImage = productImageService.save(image);
-		return new ResponseEntity<>(new ProductImageDto(), HttpStatus.CREATED);
-//		return new ResponseEntity<>(objectMapper.toProductImageDto(productImage), HttpStatus.CREATED);
+	private ProductDto enrichProductDto(Product product) {
+		ProductDto dto = objectMapper.toProductDto(product);
+		dto.setImages(objectMapper.toFileResourceDtoList(
+				fileResourceService.findByOwner(ResourceOwnerType.PRODUCT, product.getId())));
+		if (CollectionUtils.isNotEmpty(dto.getVariants())) {
+			for (ProductVariantDto variantDto : dto.getVariants()) {
+				variantDto.setImages(objectMapper.toFileResourceDtoList(
+						fileResourceService.findByOwner(ResourceOwnerType.PRODUCT_VARIANT, variantDto.getId())));
+			}
+		}
+		return dto;
 	}
 
 	private static List<String> prepareFilterCategories(ProductCategory category) {

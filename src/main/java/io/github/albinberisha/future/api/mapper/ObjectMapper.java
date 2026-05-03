@@ -9,6 +9,6 @@ import org.mapstruct.Mapper;
 @Mapper(componentModel = "spring")
 public interface ObjectMapper extends UserMapper, MerchantMapper, StoreMapper, ProductMapper, ProductCategoryMapper,
 		ProductVariantMapper, ProductFilterMapper, ProductAttributeMapper, UserRoleMapper,
-		ProductImageMapper {
+		FileResourceMapper {
 
 }

@@ -37,8 +37,6 @@ public class ProductVariant {
 	private BigDecimal price;
 	@Column(name = "stock_quantity", nullable = false)
 	private Integer stockQuantity;
-	@OneToMany(mappedBy = "productVariant", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	private Set<ProductImage> images = new HashSet<>();
 	@ManyToMany(fetch = FetchType.LAZY, cascade = { CascadeType.MERGE, CascadeType.PERSIST })
 	@JoinTable(name = "product_variant_store", joinColumns = @JoinColumn(name = "product_variant_id"), inverseJoinColumns = @JoinColumn(name = "store_id"))
 	private Set<Store> stores = new HashSet<>();
@@ -81,14 +79,6 @@ public class ProductVariant {
 
 	public void setStockQuantity(Integer stockQuantity) {
 		this.stockQuantity = stockQuantity;
-	}
-
-	public Set<ProductImage> getImages() {
-		return images;
-	}
-
-	public void setImages(Set<ProductImage> images) {
-		this.images = images;
 	}
 
 	public Set<Store> getStores() {

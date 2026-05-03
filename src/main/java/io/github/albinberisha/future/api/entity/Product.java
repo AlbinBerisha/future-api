@@ -37,8 +37,6 @@ public class Product {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "category_id", nullable = false)
 	private ProductCategory category;
-	@OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	private Set<ProductImage> images = new HashSet<>();
 	@Column(name = "rating", scale = 2)
 	private Double rating;
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -69,14 +67,6 @@ public class Product {
 
 	public void setCategory(ProductCategory category) {
 		this.category = category;
-	}
-
-	public Set<ProductImage> getImages() {
-		return images;
-	}
-
-	public void setImages(Set<ProductImage> images) {
-		this.images = images;
 	}
 
 	public Double getRating() {

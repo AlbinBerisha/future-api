@@ -22,6 +22,7 @@ public interface ProductMapper {
 	@Mapping(target = "names", source = "translations", qualifiedByName = "toProductNamesMap")
 	@Mapping(target = "descriptions", source = "translations", qualifiedByName = "toProductDescriptionsMap")
 	@Mapping(target = "category", source = "category", qualifiedByName = "toProductCategoryDtoSummary")
+	@Mapping(target = "images", ignore = true)
 	@Named("toProductDto")
 	ProductDto toProductDto(Product product);
 
