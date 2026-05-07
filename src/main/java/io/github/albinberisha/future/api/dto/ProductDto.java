@@ -2,6 +2,7 @@ package io.github.albinberisha.future.api.dto;
 
 import java.util.Collection;
 import java.util.Map;
+import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
@@ -12,7 +13,7 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
  */
 @JsonInclude(Include.NON_NULL)
 public class ProductDto {
-	private String id;
+	private UUID id;
 	private Map<String, String> names;
 	private Map<String, String> descriptions;
 	private ProductCategoryDto category;
@@ -20,11 +21,11 @@ public class ProductDto {
 	private Double rating;
 	private Collection<ProductVariantDto> variants;
 
-	public String getId() {
+	public UUID getId() {
 		return id;
 	}
 
-	public void setId(String id) {
+	public void setId(UUID id) {
 		this.id = id;
 	}
 

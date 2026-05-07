@@ -1,5 +1,7 @@
 package io.github.albinberisha.future.api.dto;
 
+import java.util.UUID;
+
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
@@ -19,7 +21,7 @@ public class UserCreateRequest {
 	@NotBlank
 	private String lastName;
 	@NotNull
-	private String roleId;
+	private UUID roleId;
 	private Boolean enabled;
 
 	public String getEmail() {
@@ -62,11 +64,11 @@ public class UserCreateRequest {
 		this.lastName = lastName;
 	}
 
-	public String getRoleId() {
+	public UUID getRoleId() {
 		return roleId;
 	}
 
-	public void setRoleId(String roleId) {
+	public void setRoleId(UUID roleId) {
 		this.roleId = roleId;
 	}
 

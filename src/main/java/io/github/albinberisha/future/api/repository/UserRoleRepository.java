@@ -1,5 +1,7 @@
 package io.github.albinberisha.future.api.repository;
 
+import java.util.UUID;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -12,8 +14,8 @@ import io.github.albinberisha.future.api.repository.custom.CustomUserRoleReposit
  *
  */
 @Repository
-public interface UserRoleRepository extends JpaRepository<UserRole, String>, CustomUserRoleRepository {
+public interface UserRoleRepository extends JpaRepository<UserRole, UUID>, CustomUserRoleRepository {
 
-	void deleteByIdAndMerchant(String id, Merchant merchant);
+	void deleteByIdAndMerchant(UUID id, Merchant merchant);
 
 }

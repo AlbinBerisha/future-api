@@ -1,5 +1,7 @@
 package io.github.albinberisha.future.api.dto;
 
+import java.util.UUID;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
@@ -9,7 +11,7 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
  */
 @JsonInclude(Include.NON_NULL)
 public class UserDto {
-	private String id;
+	private UUID id;
 	private String email;
 	private String username;
 	private String password;
@@ -19,11 +21,11 @@ public class UserDto {
 	private Boolean enabled;
 	private MerchantDto merchant;
 
-	public String getId() {
+	public UUID getId() {
 		return id;
 	}
 
-	public void setId(String id) {
+	public void setId(UUID id) {
 		this.id = id;
 	}
 

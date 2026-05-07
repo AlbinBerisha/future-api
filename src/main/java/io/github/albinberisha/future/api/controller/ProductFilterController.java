@@ -1,5 +1,7 @@
 package io.github.albinberisha.future.api.controller;
 
+import java.util.UUID;
+
 import jakarta.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,14 +44,14 @@ public class ProductFilterController {
 
 	@PreAuthorize("hasAuthority('UPDATE_PRODUCT_CATEGORY')")
 	@PutMapping("/{id}")
-	public ResponseEntity<ProductFilterDto> updateProductFilter(@PathVariable String id, @Valid @RequestBody ProductFilterUpdateRequest productFilterUpdateRequest) {
+	public ResponseEntity<ProductFilterDto> updateProductFilter(@PathVariable UUID id, @Valid @RequestBody ProductFilterUpdateRequest productFilterUpdateRequest) {
 		ProductFilter productFilter = productFilterService.update(id, productFilterUpdateRequest);
 		return ResponseEntity.ok(objectMapper.toProductFilterDto(productFilter));
 	}
 
 	@PreAuthorize("hasAuthority('UPDATE_PRODUCT_CATEGORY')")
 	@DeleteMapping("/{id}")
-	public ResponseEntity<?> deleteProductFilter(@PathVariable String id) {
+	public ResponseEntity<?> deleteProductFilter(@PathVariable UUID id) {
 		productFilterService.deleteById(id);
 		return ResponseEntity.noContent().build();
 	}

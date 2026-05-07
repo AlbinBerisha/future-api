@@ -1,6 +1,7 @@
 package io.github.albinberisha.future.api.controller;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -49,7 +50,7 @@ public class MerchantController {
 
 	@PreAuthorize("hasAuthority('VIEW_MERCHANT')")
 	@GetMapping("/{id}")
-	public ResponseEntity<MerchantDto> getMerchant(@PathVariable String id) {
+	public ResponseEntity<MerchantDto> getMerchant(@PathVariable UUID id) {
 		Merchant merchant = merchantService.findById(id).orElseThrow(() -> new ApiException("Merchant not found"));
 		return ResponseEntity.ok(objectMapper.toMerchantDto(merchant));
 	}
@@ -63,14 +64,14 @@ public class MerchantController {
 
 	@PreAuthorize("hasAuthority('UPDATE_MERCHANT')")
 	@PutMapping("/{id}")
-	public ResponseEntity<?> updateMerchant(@PathVariable String id, @Valid @RequestBody MerchantUpdateRequest merchantUpdateRequest) {
+	public ResponseEntity<?> updateMerchant(@PathVariable UUID id, @Valid @RequestBody MerchantUpdateRequest merchantUpdateRequest) {
 		merchantService.update(id, merchantUpdateRequest);
 		return ResponseEntity.ok().build();
 	}
 
 	@PreAuthorize("hasAuthority('DELETE_MERCHANT')")
 	@DeleteMapping("/{id}")
-	public ResponseEntity<?> deleteMerchant(@PathVariable String id) {
+	public ResponseEntity<?> deleteMerchant(@PathVariable UUID id) {
 		merchantService.deleteById(id);
 		return ResponseEntity.noContent().build();
 	}

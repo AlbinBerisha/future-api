@@ -1,6 +1,7 @@
 package io.github.albinberisha.future.api.entity;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
@@ -26,8 +27,12 @@ import jakarta.persistence.Table;
 @Table(name = "product_variant")
 public class ProductVariant {
 	@Id
-	@Column(name = "id", length = 36, nullable = false)
-	private String id;
+	@Column(name = "id", nullable = false)
+	private UUID id;
+	@Column(name = "created_at", updatable = false)
+	private LocalDateTime createdAt;
+	@Column(name = "updated_at", updatable = false)
+	private LocalDateTime updatedAt;
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "product_id", nullable = false)
 	private Product product;
@@ -41,12 +46,28 @@ public class ProductVariant {
 	@JoinTable(name = "product_variant_store", joinColumns = @JoinColumn(name = "product_variant_id"), inverseJoinColumns = @JoinColumn(name = "store_id"))
 	private Set<Store> stores = new HashSet<>();
 
-	public String getId() {
+	public UUID getId() {
 		return id;
 	}
 
-	public void setId(String id) {
+	public void setId(UUID id) {
 		this.id = id;
+	}
+
+	public LocalDateTime getCreatedAt() {
+		return createdAt;
+	}
+
+	public void setCreatedAt(LocalDateTime createdAt) {
+		this.createdAt = createdAt;
+	}
+
+	public LocalDateTime getUpdatedAt() {
+		return updatedAt;
+	}
+
+	public void setUpdatedAt(LocalDateTime updatedAt) {
+		this.updatedAt = updatedAt;
 	}
 
 	public Product getProduct() {
@@ -92,6 +113,6 @@ public class ProductVariant {
 	@PrePersist
 	public void handlePrePersist() {
 		if (id == null)
-			id = UUID.randomUUID().toString();
+			id = UUID.randomUUID();
 	}
 }

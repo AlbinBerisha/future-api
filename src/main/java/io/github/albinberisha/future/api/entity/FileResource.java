@@ -23,13 +23,17 @@ import jakarta.persistence.Table;
 @Table(name = "file_resource")
 public class FileResource {
 	@Id
-	@Column(name = "id", length = 36, nullable = false)
-	private String id;
+	@Column(name = "id", nullable = false)
+	private UUID id;
+	@Column(name = "created_at", updatable = false)
+	private LocalDateTime createdAt;
+	@Column(name = "updated_at", updatable = false)
+	private LocalDateTime updatedAt;
 	@Enumerated(EnumType.STRING)
 	@Column(name = "owner_type", length = 50)
 	private ResourceOwnerType ownerType;
-	@Column(name = "owner_id", length = 36)
-	private String ownerId;
+	@Column(name = "owner_id")
+	private UUID ownerId;
 	@Column(name = "original_filename", length = 255)
 	private String originalFilename;
 	@Column(name = "content_type", length = 100)
@@ -41,15 +45,29 @@ public class FileResource {
 	@Enumerated(EnumType.STRING)
 	@Column(name = "storage_type", length = 10, nullable = false)
 	private StorageType storageType;
-	@Column(name = "created_at", updatable = false)
-	private LocalDateTime createdAt;
 
-	public String getId() {
+	public UUID getId() {
 		return id;
 	}
 
-	public void setId(String id) {
+	public void setId(UUID id) {
 		this.id = id;
+	}
+
+	public LocalDateTime getCreatedAt() {
+		return createdAt;
+	}
+
+	public void setCreatedAt(LocalDateTime createdAt) {
+		this.createdAt = createdAt;
+	}
+
+	public LocalDateTime getUpdatedAt() {
+		return updatedAt;
+	}
+
+	public void setUpdatedAt(LocalDateTime updatedAt) {
+		this.updatedAt = updatedAt;
 	}
 
 	public ResourceOwnerType getOwnerType() {
@@ -60,11 +78,11 @@ public class FileResource {
 		this.ownerType = ownerType;
 	}
 
-	public String getOwnerId() {
+	public UUID getOwnerId() {
 		return ownerId;
 	}
 
-	public void setOwnerId(String ownerId) {
+	public void setOwnerId(UUID ownerId) {
 		this.ownerId = ownerId;
 	}
 
@@ -108,18 +126,10 @@ public class FileResource {
 		this.storageType = storageType;
 	}
 
-	public LocalDateTime getCreatedAt() {
-		return createdAt;
-	}
-
-	public void setCreatedAt(LocalDateTime createdAt) {
-		this.createdAt = createdAt;
-	}
-
 	@PrePersist
 	public void handlePrePersist() {
 		if (id == null)
-			id = UUID.randomUUID().toString();
+			id = UUID.randomUUID();
 		if (createdAt == null)
 			createdAt = LocalDateTime.now();
 	}

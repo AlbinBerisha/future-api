@@ -2,6 +2,7 @@ package io.github.albinberisha.future.api.controller;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import jakarta.validation.Valid;
 
@@ -88,7 +89,7 @@ public class ProductController {
 	}
 
 	@GetMapping("/{id}")
-	public ResponseEntity<ProductDto> getProduct(@PathVariable String id) {
+	public ResponseEntity<ProductDto> getProduct(@PathVariable UUID id) {
 		Product product = productService.findById(id)
 				.orElseThrow(() -> new ApiException("Product not found"));
 		return ResponseEntity.ok(enrichProductDto(product));
@@ -104,7 +105,7 @@ public class ProductController {
 
 	@PreAuthorize("hasAuthority('UPDATE_PRODUCT')")
 	@PutMapping("/{id}")
-	public ResponseEntity<?> updateProduct(Authentication authentication, @PathVariable String id, @Valid @RequestBody ProductUpdateRequest productUpdateRequest) {
+	public ResponseEntity<?> updateProduct(Authentication authentication, @PathVariable UUID id, @Valid @RequestBody ProductUpdateRequest productUpdateRequest) {
 		User authenticatedUser = (User) authentication.getPrincipal();
 		productService.update(id, authenticatedUser.getMerchant(), productUpdateRequest);
 		return ResponseEntity.ok().build();
@@ -112,7 +113,7 @@ public class ProductController {
 
 	@PreAuthorize("hasAuthority('DELETE_PRODUCT')")
 	@DeleteMapping("/{id}")
-	public ResponseEntity<?> deleteProduct(Authentication authentication, @PathVariable String id) {
+	public ResponseEntity<?> deleteProduct(Authentication authentication, @PathVariable UUID id) {
 		User authenticatedUser = (User) authentication.getPrincipal();
 		productService.deleteByIdAndMerchant(id, authenticatedUser.getMerchant());
 		return ResponseEntity.noContent().build();

@@ -2,6 +2,7 @@ package io.github.albinberisha.future.api.dto;
 
 import java.math.BigDecimal;
 import java.util.Collection;
+import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
@@ -12,18 +13,18 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
  */
 @JsonInclude(Include.NON_NULL)
 public class ProductVariantDto {
-	private String id;
+	private UUID id;
 	private Collection<ProductAttributeDto> attributes;
 	private BigDecimal price;
 	private Integer stockQuantity;
 	private Collection<FileResourceDto> images;
 	private Collection<StoreDto> stores;
 
-	public String getId() {
+	public UUID getId() {
 		return id;
 	}
 
-	public void setId(String id) {
+	public void setId(UUID id) {
 		this.id = id;
 	}
 

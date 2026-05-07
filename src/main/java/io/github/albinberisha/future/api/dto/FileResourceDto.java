@@ -1,5 +1,7 @@
 package io.github.albinberisha.future.api.dto;
 
+import java.util.UUID;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
@@ -11,18 +13,18 @@ import io.github.albinberisha.future.api.entity.enums.StorageType;
  */
 @JsonInclude(Include.NON_NULL)
 public class FileResourceDto {
-	private String id;
+	private UUID id;
 	private String path;
 	private StorageType storageType;
 	private String originalFilename;
 	private String contentType;
 	private Long fileSize;
 
-	public String getId() {
+	public UUID getId() {
 		return id;
 	}
 
-	public void setId(String id) {
+	public void setId(UUID id) {
 		this.id = id;
 	}
 

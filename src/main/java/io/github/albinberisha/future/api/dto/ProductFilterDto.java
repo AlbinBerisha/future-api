@@ -1,6 +1,7 @@
 package io.github.albinberisha.future.api.dto;
 
 import java.util.Map;
+import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
@@ -13,24 +14,24 @@ import io.github.albinberisha.future.api.entity.enums.ProductFilterType;
  */
 @JsonInclude(Include.NON_NULL)
 public class ProductFilterDto {
-	private String id;
-	private String productCategoryId;
+	private UUID id;
+	private UUID productCategoryId;
 	private Map<String, String> names;
 	private ProductFilterType type;
 
-	public String getId() {
+	public UUID getId() {
 		return id;
 	}
 
-	public void setId(String id) {
+	public void setId(UUID id) {
 		this.id = id;
 	}
 
-	public String getProductCategoryId() {
+	public UUID getProductCategoryId() {
 		return productCategoryId;
 	}
 
-	public void setProductCategoryId(String productCategoryId) {
+	public void setProductCategoryId(UUID productCategoryId) {
 		this.productCategoryId = productCategoryId;
 	}
 

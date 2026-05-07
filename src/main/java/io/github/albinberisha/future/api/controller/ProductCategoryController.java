@@ -2,6 +2,7 @@ package io.github.albinberisha.future.api.controller;
 
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 import jakarta.validation.Valid;
 
@@ -60,20 +61,20 @@ public class ProductCategoryController {
 
 	@PreAuthorize("hasAuthority('UPDATE_PRODUCT_CATEGORY')")
 	@PutMapping("/{id}")
-	public ResponseEntity<ProductCategoryDto> updateProductCategory(@PathVariable String id, @Valid @RequestBody ProductCategoryDto productCategoryDto) {
+	public ResponseEntity<ProductCategoryDto> updateProductCategory(@PathVariable UUID id, @Valid @RequestBody ProductCategoryDto productCategoryDto) {
 		ProductCategory category = productCategoryService.update(id, productCategoryDto);
 		return ResponseEntity.ok(objectMapper.toProductCategoryDto(category));
 	}
 
 	@PreAuthorize("hasAuthority('DELETE_PRODUCT_CATEGORY')")
 	@DeleteMapping("/{id}")
-	public ResponseEntity<?> deleteProductCategory(@PathVariable String id) {
+	public ResponseEntity<?> deleteProductCategory(@PathVariable UUID id) {
 		productCategoryService.deleteById(id);
 		return ResponseEntity.noContent().build();
 	}
 
 	@GetMapping("/{productCategoryId}/product-filters")
-	public ResponseEntity<PaginatedResponse<ProductFilterDto>> listProductFilters(@PathVariable String productCategoryId) {
+	public ResponseEntity<PaginatedResponse<ProductFilterDto>> listProductFilters(@PathVariable UUID productCategoryId) {
 		Set<ProductFilter> filters = productFilterService.findByProductCategoryId(productCategoryId);
 		PaginatedResponse<ProductFilterDto> response = new PaginatedResponse<>();
 		response.setContent(objectMapper.toProductFilterDtoList(filters));

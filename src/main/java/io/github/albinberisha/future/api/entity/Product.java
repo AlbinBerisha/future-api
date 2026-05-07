@@ -1,5 +1,6 @@
 package io.github.albinberisha.future.api.entity;
 
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
@@ -29,28 +30,46 @@ import jakarta.persistence.UniqueConstraint;
 @Table(name = "product")
 public class Product {
 	@Id
-	@Column(name = "id", length = 36, nullable = false)
-	private String id;
+	@Column(name = "id", nullable = false)
+	private UUID id;
+	@Column(name = "created_at", updatable = false)
+	private LocalDateTime createdAt;
+	@Column(name = "updated_at", updatable = false)
+	private LocalDateTime updatedAt;
 	@ElementCollection(fetch = FetchType.EAGER)
 	@CollectionTable(name = "product_translations", joinColumns = @JoinColumn(name = "product_id"), uniqueConstraints = @UniqueConstraint(columnNames = { "product_id", "language" }))
 	private Set<ProductTranslations> translations = new HashSet<>();
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "category_id", nullable = false)
 	private ProductCategory category;
-	@Column(name = "rating", scale = 2)
-	private Double rating;
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "merchant_id", nullable = false)
 	private Merchant merchant;
 	@OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
 	private Set<ProductVariant> variants = new HashSet<>();
 
-	public String getId() {
+	public UUID getId() {
 		return id;
 	}
 
-	public void setId(String id) {
+	public void setId(UUID id) {
 		this.id = id;
+	}
+
+	public LocalDateTime getCreatedAt() {
+		return createdAt;
+	}
+
+	public void setCreatedAt(LocalDateTime createdAt) {
+		this.createdAt = createdAt;
+	}
+
+	public LocalDateTime getUpdatedAt() {
+		return updatedAt;
+	}
+
+	public void setUpdatedAt(LocalDateTime updatedAt) {
+		this.updatedAt = updatedAt;
 	}
 
 	public Set<ProductTranslations> getTranslations() {
@@ -67,14 +86,6 @@ public class Product {
 
 	public void setCategory(ProductCategory category) {
 		this.category = category;
-	}
-
-	public Double getRating() {
-		return rating;
-	}
-
-	public void setRating(Double rating) {
-		this.rating = rating;
 	}
 
 	public Merchant getMerchant() {
@@ -96,6 +107,6 @@ public class Product {
 	@PrePersist
 	public void handlePrePersist() {
 		if (id == null)
-			id = UUID.randomUUID().toString();
+			id = UUID.randomUUID();
 	}
 }

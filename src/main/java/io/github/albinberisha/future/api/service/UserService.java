@@ -2,6 +2,7 @@ package io.github.albinberisha.future.api.service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
@@ -47,7 +48,7 @@ public class UserService {
 		return userRepository.findByUsername(username, USER_WITH_ALL);
 	}
 
-	public Optional<User> findById(@NotBlank String id) {
+	public Optional<User> findById(@NotNull UUID id) {
 		return userRepository.findById(id, USER_WITH_ALL);
 	}
 
@@ -63,7 +64,7 @@ public class UserService {
 	}
 
 	@Transactional
-	public User update(String id, @Valid UserUpdateRequest userUpdateRequest, User authenticatedUser) {
+	public User update(@NotNull UUID id, @Valid UserUpdateRequest userUpdateRequest, User authenticatedUser) {
 		User user = null;
 		if (authenticatedUser.getRole().getScope() == Scope.SYSTEM)
 			user = userRepository.findById(id)
@@ -83,7 +84,7 @@ public class UserService {
 			user.setFirstName(userUpdateRequest.getFirstName());
 		if (StringUtils.isNotBlank(userUpdateRequest.getLastName()))
 			user.setLastName(userUpdateRequest.getLastName());
-		if (StringUtils.isNotBlank(userUpdateRequest.getRoleId())) {
+		if (userUpdateRequest.getRoleId() != null) {
 			UserRole role = userRoleService.findById(userUpdateRequest.getRoleId())
 					.orElseThrow(() -> new ApiException("User role not found"));
 			user.setRole(role);
@@ -93,7 +94,7 @@ public class UserService {
 		return userRepository.save(user);
 	}
 
-	public void deleteById(@NotBlank String id) {
+	public void deleteById(@NotNull UUID id) {
 		userRepository.deleteById(id);
 	}
 
@@ -101,12 +102,12 @@ public class UserService {
 		return userRepository.findByMerchant(merchant, USER_WITH_ALL);
 	}
 
-	public Optional<User> findByMerchantAndId(@NotNull Merchant merchant, @NotBlank String id) {
+	public Optional<User> findByMerchantAndId(@NotNull Merchant merchant, @NotNull UUID id) {
 		return userRepository.findByMerchantAndId(merchant, id, USER_WITH_ALL);
 	}
 
 	@Transactional
-	public void deleteByMerchantAndId(@NotNull Merchant merchant, @NotBlank String id) {
+	public void deleteByMerchantAndId(@NotNull Merchant merchant, @NotNull UUID id) {
 		userRepository.deleteByMerchantAndId(merchant, id);
 	}
 }

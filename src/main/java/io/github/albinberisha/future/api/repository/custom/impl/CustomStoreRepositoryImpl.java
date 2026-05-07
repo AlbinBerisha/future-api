@@ -2,6 +2,7 @@ package io.github.albinberisha.future.api.repository.custom.impl;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,7 +19,7 @@ import io.github.albinberisha.future.api.repository.custom.CustomStoreRepository
 public class CustomStoreRepositoryImpl extends AbstractBaseCustomRepository<Store> implements CustomStoreRepository {
 
 	@Override
-	public Optional<Store> findByIdAndMerchant(String id, Merchant merchant, String entityGraphName) {
+	public Optional<Store> findByIdAndMerchant(UUID id, Merchant merchant, String entityGraphName) {
 		return entityManager.createQuery("SELECT s FROM Store s WHERE s.id = :id AND s.merchant = :merchant", Store.class)
 				.setParameter("id", id)
 				.setParameter("merchant", merchant)

@@ -1,5 +1,6 @@
 package io.github.albinberisha.future.api.entity;
 
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
@@ -31,8 +32,12 @@ import jakarta.persistence.UniqueConstraint;
 @Table(name = "user_role", uniqueConstraints = { @UniqueConstraint(columnNames = { "name", "merchant_id" }) })
 public class UserRole {
 	@Id
-	@Column(name = "id", length = 36, nullable = false)
-	private String id;
+	@Column(name = "id", nullable = false)
+	private UUID id;
+	@Column(name = "created_at", updatable = false)
+	private LocalDateTime createdAt;
+	@Column(name = "updated_at", updatable = false)
+	private LocalDateTime updatedAt;
 	@Column(name = "name", length = 32, nullable = false)
 	private String name;
 	@Enumerated(EnumType.STRING)
@@ -47,12 +52,28 @@ public class UserRole {
 	@Column(name = "permission", length = 32, nullable = false)
 	private Set<UserPermission> permissions = new HashSet<>();
 
-	public String getId() {
+	public UUID getId() {
 		return id;
 	}
 
-	public void setId(String id) {
+	public void setId(UUID id) {
 		this.id = id;
+	}
+
+	public LocalDateTime getCreatedAt() {
+		return createdAt;
+	}
+
+	public void setCreatedAt(LocalDateTime createdAt) {
+		this.createdAt = createdAt;
+	}
+
+	public LocalDateTime getUpdatedAt() {
+		return updatedAt;
+	}
+
+	public void setUpdatedAt(LocalDateTime updatedAt) {
+		this.updatedAt = updatedAt;
 	}
 
 	public String getName() {
@@ -90,6 +111,6 @@ public class UserRole {
 	@PrePersist
 	public void handlePrePersist() {
 		if (id == null)
-			id = UUID.randomUUID().toString();
+			id = UUID.randomUUID();
 	}
 }

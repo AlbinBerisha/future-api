@@ -39,15 +39,15 @@ public class FileResourceService {
 	@Autowired
 	private Environment environment;
 
-	public Optional<FileResource> findById(@NotBlank String id) {
+	public Optional<FileResource> findById(@NotNull UUID id) {
 		return fileResourceRepository.findById(id);
 	}
 
-	public Set<FileResource> findByIdIn(@NotEmpty Collection<String> ids) {
+	public Set<FileResource> findByIdIn(@NotEmpty Collection<UUID> ids) {
 		return fileResourceRepository.findByIdIn(ids);
 	}
 
-	public List<FileResource> findByOwner(@NotNull ResourceOwnerType ownerType, @NotBlank String ownerId) {
+	public List<FileResource> findByOwner(@NotNull ResourceOwnerType ownerType, @NotNull UUID ownerId) {
 		return fileResourceRepository.findByOwnerTypeAndOwnerId(ownerType, ownerId);
 	}
 
@@ -68,8 +68,8 @@ public class FileResourceService {
 	}
 
 	@Transactional
-	public void linkToOwner(@NotEmpty Collection<String> resourceIds, @NotNull ResourceOwnerType ownerType,
-			@NotBlank String ownerId) {
+	public void linkToOwner(@NotEmpty Collection<UUID> resourceIds, @NotNull ResourceOwnerType ownerType,
+			@NotBlank UUID ownerId) {
 		Set<FileResource> resources = fileResourceRepository.findByIdIn(resourceIds);
 		if (resources.size() != resourceIds.size()) {
 			throw new ApiException("Some resources not found");
@@ -81,19 +81,19 @@ public class FileResourceService {
 		fileResourceRepository.saveAll(resources);
 	}
 
-	public void deleteById(@NotBlank String id) {
+	public void deleteById(@NotNull UUID id) {
 		FileResource resource = fileResourceRepository.findById(id)
 				.orElseThrow(() -> new ApiException("Resource not found"));
 		fileResourceRepository.delete(resource);
 	}
 
-	public InputStream download(@NotBlank String id) throws IOException {
+	public InputStream download(@NotNull UUID id) throws IOException {
 		FileResource resource = fileResourceRepository.findById(id)
 				.orElseThrow(() -> new ApiException("Resource not found"));
 		return fileStorageService.download(resource.getPath());
 	}
 
-	public String getDownloadUrl(@NotBlank String id) {
+	public String getDownloadUrl(@NotNull UUID id) {
 		FileResource resource = fileResourceRepository.findById(id)
 				.orElseThrow(() -> new ApiException("Resource not found"));
 		if (resource.getStorageType() != StorageType.S3) {

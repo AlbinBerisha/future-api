@@ -2,24 +2,25 @@ package io.github.albinberisha.future.api.dto;
 
 import java.math.BigDecimal;
 import java.util.Collection;
+import java.util.UUID;
 
 /**
  * @author Albin Berisha <albin199915@gmail.com>
  *
  */
 public class ProductVariantUpdateRequest {
-	private String id;
+	private UUID id;
 	private Collection<ProductAttributeDto> attributes;
 	private BigDecimal price;
 	private Integer stockQuantity;
-	private Collection<String> imageIds;
-	private Collection<String> storeIds;
+	private Collection<UUID> imageIds;
+	private Collection<UUID> storeIds;
 
-	public String getId() {
+	public UUID getId() {
 		return id;
 	}
 
-	public void setId(String id) {
+	public void setId(UUID id) {
 		this.id = id;
 	}
 
@@ -47,19 +48,19 @@ public class ProductVariantUpdateRequest {
 		this.stockQuantity = stockQuantity;
 	}
 
-	public Collection<String> getImageIds() {
+	public Collection<UUID> getImageIds() {
 		return imageIds;
 	}
 
-	public void setImageIds(Collection<String> imageIds) {
+	public void setImageIds(Collection<UUID> imageIds) {
 		this.imageIds = imageIds;
 	}
 
-	public Collection<String> getStoreIds() {
+	public Collection<UUID> getStoreIds() {
 		return storeIds;
 	}
 
-	public void setStoreIds(Collection<String> storeIds) {
+	public void setStoreIds(Collection<UUID> storeIds) {
 		this.storeIds = storeIds;
 	}
 }

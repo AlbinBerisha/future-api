@@ -2,10 +2,10 @@ package io.github.albinberisha.future.api.service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import jakarta.annotation.Nullable;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +36,7 @@ public class UserRoleService {
 		return userRoleRepository.findAll();
 	}
 
-	public Optional<UserRole> findById(@NotBlank String id) {
+	public Optional<UserRole> findById(@NotNull UUID id) {
 		return userRoleRepository.findById(id, USER_ROLE_WITH_ALL);
 	}
 
@@ -44,7 +44,7 @@ public class UserRoleService {
 		return userRoleRepository.findByMerchant(merchant, USER_ROLE_WITH_ALL);
 	}
 
-	public Optional<UserRole> findByIdAndMerchant(@NotBlank String id, @NotNull Merchant merchant) {
+	public Optional<UserRole> findByIdAndMerchant(@NotNull UUID id, @NotNull Merchant merchant) {
 		return userRoleRepository.findByIdAndMerchant(id, merchant, USER_ROLE_WITH_ALL);
 	}
 
@@ -57,7 +57,7 @@ public class UserRoleService {
 	}
 
 	@Transactional
-	public UserRole update(@NotBlank String id, Merchant merchant, @Valid @NotNull UserRoleUpdateRequest userRoleUpdatingRequest) {
+	public UserRole update(@NotNull UUID id, Merchant merchant, @Valid @NotNull UserRoleUpdateRequest userRoleUpdatingRequest) {
 		UserRole role = userRoleRepository.findByIdAndMerchant(id, merchant, "UserRole.basic")
 				.orElseThrow(() -> new ApiException("User role not found"));
 		List<UserRole> merchantOwnedUserRoles = userRoleRepository.findByMerchant(merchant, USER_ROLE_WITH_ALL);
@@ -74,7 +74,7 @@ public class UserRoleService {
 	}
 
 	@Transactional
-	public void deleteByIdAndMerchant(@NotBlank String id, @NotNull Merchant merchant) {
+	public void deleteByIdAndMerchant(@NotNull UUID id, @NotNull Merchant merchant) {
 		userRoleRepository.deleteByIdAndMerchant(id, merchant);
 	}
 }

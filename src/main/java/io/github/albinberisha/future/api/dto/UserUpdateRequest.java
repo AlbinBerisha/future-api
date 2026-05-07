@@ -1,5 +1,7 @@
 package io.github.albinberisha.future.api.dto;
 
+import java.util.UUID;
+
 /**
  * @author Albin Berisha <albin199915@gmail.com>
  *
@@ -10,7 +12,7 @@ public class UserUpdateRequest {
 	private String password;
 	private String firstName;
 	private String lastName;
-	private String roleId;
+	private UUID roleId;
 	private Boolean enabled;
 
 	public String getEmail() {
@@ -53,11 +55,11 @@ public class UserUpdateRequest {
 		this.lastName = lastName;
 	}
 
-	public String getRoleId() {
+	public UUID getRoleId() {
 		return roleId;
 	}
 
-	public void setRoleId(String roleId) {
+	public void setRoleId(UUID roleId) {
 		this.roleId = roleId;
 	}
 

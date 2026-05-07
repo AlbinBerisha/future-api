@@ -2,10 +2,11 @@ package io.github.albinberisha.future.api.dto;
 
 import java.util.Collection;
 import java.util.Map;
+import java.util.UUID;
 
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 
 /**
  * @author Albin Berisha <albin199915@gmail.com>
@@ -16,10 +17,10 @@ public class ProductCreateRequest {
 	private Map<String, String> names;
 	@NotEmpty
 	private Map<String, String> descriptions;
-	@NotBlank
-	private String categoryId;
+	@NotNull
+	private UUID categoryId;
 	@NotEmpty
-	private Collection<String> imageIds;
+	private Collection<UUID> imageIds;
 	@NotEmpty
 	private Collection<@Valid ProductVariantCreateRequest> variants;
 
@@ -39,19 +40,19 @@ public class ProductCreateRequest {
 		this.descriptions = descriptions;
 	}
 
-	public String getCategoryId() {
+	public UUID getCategoryId() {
 		return categoryId;
 	}
 
-	public void setCategoryId(String categoryId) {
+	public void setCategoryId(UUID categoryId) {
 		this.categoryId = categoryId;
 	}
 
-	public Collection<String> getImageIds() {
+	public Collection<UUID> getImageIds() {
 		return imageIds;
 	}
 
-	public void setImageIds(Collection<String> imageIds) {
+	public void setImageIds(Collection<UUID> imageIds) {
 		this.imageIds = imageIds;
 	}
 

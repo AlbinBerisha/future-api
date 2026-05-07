@@ -2,6 +2,7 @@ package io.github.albinberisha.future.api.repository.custom.impl;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,7 +37,7 @@ public class CustomUserRoleRepositoryImpl extends AbstractBaseCustomRepository<U
 	}
 
 	@Override
-	public Optional<UserRole> findByIdAndMerchant(String id, Merchant merchant, String entityGraphName) {
+	public Optional<UserRole> findByIdAndMerchant(UUID id, Merchant merchant, String entityGraphName) {
 		return entityManager.createQuery("SELECT ur FROM UserRole ur WHERE ur.id = :id AND ((:merchant IS NULL AND ur.merchant IS NULL) OR ur.merchant = :merchant)", UserRole.class)
 				.setParameter("id", id)
 				.setParameter("merchant", merchant)

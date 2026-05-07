@@ -2,6 +2,7 @@ package io.github.albinberisha.future.api.dto;
 
 import java.util.Collection;
 import java.util.Map;
+import java.util.UUID;
 
 import jakarta.validation.Valid;
 
@@ -12,10 +13,10 @@ import jakarta.validation.Valid;
 public class ProductUpdateRequest {
 	private Map<String, String> names;
 	private Map<String, String> descriptions;
-	private String categoryId;
-	private Collection<String> imageIds;
+	private UUID categoryId;
+	private Collection<UUID> imageIds;
 	private Collection<@Valid ProductVariantUpdateRequest> variants;
-	private Collection<String> storeIds;
+	private Collection<UUID> storeIds;
 
 	public Map<String, String> getNames() {
 		return names;
@@ -33,19 +34,19 @@ public class ProductUpdateRequest {
 		this.descriptions = descriptions;
 	}
 
-	public String getCategoryId() {
+	public UUID getCategoryId() {
 		return categoryId;
 	}
 
-	public void setCategoryId(String categoryId) {
+	public void setCategoryId(UUID categoryId) {
 		this.categoryId = categoryId;
 	}
 
-	public Collection<String> getImageIds() {
+	public Collection<UUID> getImageIds() {
 		return imageIds;
 	}
 
-	public void setImageIds(Collection<String> imageIds) {
+	public void setImageIds(Collection<UUID> imageIds) {
 		this.imageIds = imageIds;
 	}
 
@@ -57,11 +58,11 @@ public class ProductUpdateRequest {
 		this.variants = variants;
 	}
 
-	public Collection<String> getStoreIds() {
+	public Collection<UUID> getStoreIds() {
 		return storeIds;
 	}
 
-	public void setStoreIds(Collection<String> storeIds) {
+	public void setStoreIds(Collection<UUID> storeIds) {
 		this.storeIds = storeIds;
 	}
 }

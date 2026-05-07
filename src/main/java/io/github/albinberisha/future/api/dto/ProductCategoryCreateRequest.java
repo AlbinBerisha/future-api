@@ -2,6 +2,7 @@ package io.github.albinberisha.future.api.dto;
 
 import java.util.Collection;
 import java.util.Map;
+import java.util.UUID;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
@@ -11,16 +12,16 @@ import jakarta.validation.constraints.NotEmpty;
  *
  */
 public class ProductCategoryCreateRequest {
-	private String parentCategoryId;
+	private UUID parentCategoryId;
 	@NotEmpty
 	private Map<String, String> names;
 	private Collection<@Valid ProductFilterDto> filters;
 
-	public String getParentCategoryId() {
+	public UUID getParentCategoryId() {
 		return parentCategoryId;
 	}
 
-	public void setParentCategoryId(String parentCategoryId) {
+	public void setParentCategoryId(UUID parentCategoryId) {
 		this.parentCategoryId = parentCategoryId;
 	}
 

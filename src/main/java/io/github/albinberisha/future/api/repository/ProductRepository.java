@@ -2,6 +2,7 @@ package io.github.albinberisha.future.api.repository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -18,14 +19,14 @@ import io.github.albinberisha.future.api.repository.custom.CustomProductReposito
  *
  */
 @Repository
-public interface ProductRepository extends JpaRepository<Product, String>, CustomProductRepository {
+public interface ProductRepository extends JpaRepository<Product, UUID>, CustomProductRepository {
 
 	@EntityGraph("Product.withAll")
 	@Query("SELECT p FROM Product p WHERE (:categories IS NULL OR p.category.name IN :categories)")
 	List<Product> findByFilters(@Param("categories") List<String> categories);
 
-	Optional<Product> findByIdAndMerchant(String id, Merchant merchant);
+	Optional<Product> findByIdAndMerchant(UUID id, Merchant merchant);
 
-	void deleteByIdAndMerchant(String id, Merchant merchant);
+	void deleteByIdAndMerchant(UUID id, Merchant merchant);
 
 }

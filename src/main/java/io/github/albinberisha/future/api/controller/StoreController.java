@@ -1,6 +1,7 @@
 package io.github.albinberisha.future.api.controller;
 
 import java.util.List;
+import java.util.UUID;
 
 import jakarta.validation.Valid;
 
@@ -53,7 +54,7 @@ public class StoreController {
 
 	@PreAuthorize("hasAuthority('VIEW_STORE')")
 	@GetMapping("/{id}")
-	public ResponseEntity<StoreDto> getStore(@PathVariable String id) {
+	public ResponseEntity<StoreDto> getStore(@PathVariable UUID id) {
 		Store store = storeService.findById(id).orElseThrow(() -> new ApiException("Store not found"));
 		return ResponseEntity.ok(objectMapper.toStoreDto(store));
 	}
@@ -68,14 +69,14 @@ public class StoreController {
 
 	@PreAuthorize("hasAuthority('UPDATE_STORE')")
 	@PutMapping("/{id}")
-	public ResponseEntity<?> updateStore(@PathVariable String id, @Valid @RequestBody StoreUpdateRequest storeUpdateRequest) {
+	public ResponseEntity<?> updateStore(@PathVariable UUID id, @Valid @RequestBody StoreUpdateRequest storeUpdateRequest) {
 		storeService.update(id, storeUpdateRequest);
 		return ResponseEntity.ok().build();
 	}
 
 	@PreAuthorize("hasAuthority('DELETE_STORE')")
 	@DeleteMapping("/{id}")
-	public ResponseEntity<?> deleteStore(Authentication auth, @PathVariable String id) {
+	public ResponseEntity<?> deleteStore(Authentication auth, @PathVariable UUID id) {
 		User authUser = (User) auth.getPrincipal();
 		storeService.deleteByIdAndMerchant(id, authUser.getMerchant());
 		return ResponseEntity.noContent().build();

@@ -9,12 +9,9 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -60,7 +57,7 @@ public class ProductService {
 		return productRepository.findAll(PRODUCT_WITH_ALL);
 	}
 
-	public Optional<Product> findById(@NotBlank String id) {
+	public Optional<Product> findById(@NotNull UUID id) {
 		return productRepository.findById(id, PRODUCT_WITH_ALL);
 	}
 
@@ -89,7 +86,7 @@ public class ProductService {
 			variant.setStockQuantity(productVariantDto.getStockQuantity());
 			variant.setAttributes(productVariantDto.getAttributes().stream().map(productAttributeDto -> {
 				ProductAttribute attribute = new ProductAttribute();
-				attribute.setId(UUID.randomUUID().toString());
+				attribute.setId(UUID.randomUUID());
 				attribute.setProductVariant(variant);
 				ProductFilter filter = productFilterService.findById(productAttributeDto.getProductFilterId())
 						.orElseThrow(() -> new ApiException("Product filter not found"));
@@ -125,12 +122,12 @@ public class ProductService {
 	}
 
 	@Transactional
-	public void deleteByIdAndMerchant(@NotBlank String id, @NotNull Merchant merchant) {
+	public void deleteByIdAndMerchant(@NotNull UUID id, @NotNull Merchant merchant) {
 		productRepository.deleteByIdAndMerchant(id, merchant);
 	}
 
 	@Transactional
-	public Product update(@NotBlank String id, @NotNull Merchant merchant, @NotNull @Valid ProductUpdateRequest productUpdateRequest) {
+	public Product update(@NotNull UUID id, @NotNull Merchant merchant, @NotNull @Valid ProductUpdateRequest productUpdateRequest) {
 		Product product = productRepository.findByIdAndMerchant(id, merchant)
 				.orElseThrow(() -> new ApiException("Product not found"));
 		Stream.concat(productUpdateRequest.getNames().keySet().stream(), productUpdateRequest.getDescriptions().keySet().stream()).distinct().forEach(lng -> {
@@ -145,7 +142,7 @@ public class ProductService {
 			pt.setName(productUpdateRequest.getNames().get(lng));
 			pt.setDescription(productUpdateRequest.getDescriptions().get(lng));
 		});
-		if (StringUtils.isNotBlank(productUpdateRequest.getCategoryId())) {
+		if (productUpdateRequest.getCategoryId() != null) {
 			ProductCategory category = productCategoryService.findById(productUpdateRequest.getCategoryId())
 					.orElseThrow(() -> new ApiException("Product category not found"));
 			product.setCategory(category);
@@ -157,7 +154,7 @@ public class ProductService {
 			List<ProductVariant> combinedVariants = new ArrayList<>();
 			for (ProductVariantUpdateRequest productVariantDto : productUpdateRequest.getVariants()) {
 				ProductVariant variant = product.getVariants().stream()
-						.filter(v -> Strings.CS.equals(v.getId(), productVariantDto.getId()))
+						.filter(v -> v.getId().equals(productVariantDto.getId()))
 						.findFirst()
 						.orElseGet(() -> {
 							ProductVariant newProductVariant = new ProductVariant();
@@ -173,11 +170,11 @@ public class ProductService {
 				List<ProductAttribute> combinedAttributes = new ArrayList<>();
 				for (ProductAttributeDto productAttributeDto : productVariantDto.getAttributes()) {
 					ProductAttribute attribute = variant.getAttributes().stream()
-							.filter(a -> Strings.CS.equals(a.getId(), productAttributeDto.getId()))
+							.filter(a -> a.getId().equals(productAttributeDto.getId()))
 							.findFirst()
 							.orElseGet(() -> {
 								ProductAttribute newProductAttribute = new ProductAttribute();
-								newProductAttribute.setId(UUID.randomUUID().toString());
+								newProductAttribute.setId(UUID.randomUUID());
 								newProductAttribute.setProductVariant(variant);
 								ProductFilter filter = productFilterService.findById(productAttributeDto.getProductFilterId())
 										.orElseThrow(() -> new ApiException("Product filter not found"));

@@ -1,9 +1,9 @@
 package io.github.albinberisha.future.api.dto;
 
 import java.util.Map;
+import java.util.UUID;
 
 import io.github.albinberisha.future.api.entity.enums.ProductFilterType;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 
@@ -12,18 +12,18 @@ import jakarta.validation.constraints.NotNull;
  *
  */
 public class ProductFilterCreateRequest {
-	@NotBlank
-	private String productCategoryId;
+	@NotNull
+	private UUID productCategoryId;
 	@NotEmpty
 	private Map<String, String> names;
 	@NotNull
 	private ProductFilterType type;
 
-	public String getProductCategoryId() {
+	public UUID getProductCategoryId() {
 		return productCategoryId;
 	}
 
-	public void setProductCategoryId(String productCategoryId) {
+	public void setProductCategoryId(UUID productCategoryId) {
 		this.productCategoryId = productCategoryId;
 	}
 

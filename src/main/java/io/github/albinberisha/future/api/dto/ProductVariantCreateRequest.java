@@ -2,6 +2,7 @@ package io.github.albinberisha.future.api.dto;
 
 import java.math.BigDecimal;
 import java.util.Collection;
+import java.util.UUID;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -16,8 +17,8 @@ public class ProductVariantCreateRequest {
 	private BigDecimal price;
 	@NotNull
 	private Integer stockQuantity;
-	private Collection<String> imageIds;
-	private Collection<String> storeIds;
+	private Collection<UUID> imageIds;
+	private Collection<UUID> storeIds;
 
 	public Collection<ProductAttributeDto> getAttributes() {
 		return attributes;
@@ -43,19 +44,19 @@ public class ProductVariantCreateRequest {
 		this.stockQuantity = stockQuantity;
 	}
 
-	public Collection<String> getImageIds() {
+	public Collection<UUID> getImageIds() {
 		return imageIds;
 	}
 
-	public void setImageIds(Collection<String> imageIds) {
+	public void setImageIds(Collection<UUID> imageIds) {
 		this.imageIds = imageIds;
 	}
 
-	public Collection<String> getStoreIds() {
+	public Collection<UUID> getStoreIds() {
 		return storeIds;
 	}
 
-	public void setStoreIds(Collection<String> storeIds) {
+	public void setStoreIds(Collection<UUID> storeIds) {
 		this.storeIds = storeIds;
 	}
 }

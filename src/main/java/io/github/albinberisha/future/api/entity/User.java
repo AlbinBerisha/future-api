@@ -1,5 +1,6 @@
 package io.github.albinberisha.future.api.entity;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.UUID;
 
@@ -43,13 +44,17 @@ public class User implements UserDetails {
 	 */
 	private static final long serialVersionUID = -7640530677419272463L;
 	@Id
-	@Column(name = "id", length = 36, nullable = false)
-	private String id;
+	@Column(name = "id", nullable = false)
+	private UUID id;
+	@Column(name = "created_at", updatable = false)
+	private LocalDateTime createdAt;
+	@Column(name = "updated_at", updatable = false)
+	private LocalDateTime updatedAt;
 	@Column(name = "email", length = 320, unique = true, nullable = false)
 	private String email;
 	@Column(name = "username", length = 16, unique = true, nullable = false)
 	private String username;
-	@Column(name = "password", length = 16, nullable = false)
+	@Column(name = "password", length = 255, nullable = false)
 	private String password;
 	@Column(name = "first_name", length = 32, nullable = false)
 	private String firstName;
@@ -64,12 +69,28 @@ public class User implements UserDetails {
 	@JoinColumn(name = "merchant_id", nullable = true)
 	private Merchant merchant;
 
-	public String getId() {
+	public UUID getId() {
 		return id;
 	}
 
-	public void setId(String id) {
+	public void setId(UUID id) {
 		this.id = id;
+	}
+
+	public LocalDateTime getCreatedAt() {
+		return createdAt;
+	}
+
+	public void setCreatedAt(LocalDateTime createdAt) {
+		this.createdAt = createdAt;
+	}
+
+	public LocalDateTime getUpdatedAt() {
+		return updatedAt;
+	}
+
+	public void setUpdatedAt(LocalDateTime updatedAt) {
+		this.updatedAt = updatedAt;
 	}
 
 	public String getEmail() {
@@ -162,6 +183,6 @@ public class User implements UserDetails {
 	@PrePersist
 	public void handlePrePersist() {
 		if (id == null)
-			id = UUID.randomUUID().toString();
+			id = UUID.randomUUID();
 	}
 }

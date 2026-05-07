@@ -1,5 +1,8 @@
 package io.github.albinberisha.future.api.entity;
 
+import java.time.LocalDateTime;
+import java.util.UUID;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -16,8 +19,12 @@ import jakarta.persistence.Table;
 @Table(name = "product_attribute")
 public class ProductAttribute {
 	@Id
-	@Column(name = "id", length = 36, nullable = false)
-	private String id;
+	@Column(name = "id", nullable = false)
+	private UUID id;
+	@Column(name = "created_at", updatable = false)
+	private LocalDateTime createdAt;
+	@Column(name = "updated_at", updatable = false)
+	private LocalDateTime updatedAt;
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "product_variant_id", nullable = false)
 	private ProductVariant productVariant;
@@ -30,12 +37,28 @@ public class ProductAttribute {
 	@JoinColumn(name = "product_category_id")
 	private ProductCategory productCategory;
 
-	public String getId() {
+	public UUID getId() {
 		return id;
 	}
 
-	public void setId(String id) {
+	public void setId(UUID id) {
 		this.id = id;
+	}
+
+	public LocalDateTime getCreatedAt() {
+		return createdAt;
+	}
+
+	public void setCreatedAt(LocalDateTime createdAt) {
+		this.createdAt = createdAt;
+	}
+
+	public LocalDateTime getUpdatedAt() {
+		return updatedAt;
+	}
+
+	public void setUpdatedAt(LocalDateTime updatedAt) {
+		this.updatedAt = updatedAt;
 	}
 
 	public ProductVariant getProductVariant() {

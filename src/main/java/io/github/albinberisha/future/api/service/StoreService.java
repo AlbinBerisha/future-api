@@ -4,9 +4,9 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.UUID;
 
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 
@@ -36,7 +36,7 @@ public class StoreService {
 	@Autowired
 	private ObjectMapper objectMapper;
 
-	public Optional<Store> findById(@NotBlank String id) {
+	public Optional<Store> findById(@NotNull UUID id) {
 		return storeRepository.findById(id, STORE_WITH_ALL);
 	}
 
@@ -47,19 +47,19 @@ public class StoreService {
 	}
 
 	@Transactional
-	public long deleteByIdAndMerchant(@NotBlank String id, @NotNull Merchant merchant) {
+	public long deleteByIdAndMerchant(@NotNull UUID id, @NotNull Merchant merchant) {
 		return storeRepository.deleteByIdAndMerchant(id, merchant);
 	}
 
 	@Transactional
-	public Store update(@NotBlank String id, @Valid @NotNull StoreUpdateRequest storeUpdateRequest) {
+	public Store update(@NotNull UUID id, @Valid @NotNull StoreUpdateRequest storeUpdateRequest) {
 		Store store = storeRepository.findById(id).orElseThrow(() -> new ApiException("Store not found"));
 		store.setName(storeUpdateRequest.getName());
 		store.setDescription(storeUpdateRequest.getDescription());
 		return storeRepository.save(store);
 	}
 
-	public Set<Store> findByIdIn(@NotEmpty Collection<String> ids) {
+	public Set<Store> findByIdIn(@NotEmpty Collection<UUID> ids) {
 		return storeRepository.findByIdIn(ids);
 	}
 

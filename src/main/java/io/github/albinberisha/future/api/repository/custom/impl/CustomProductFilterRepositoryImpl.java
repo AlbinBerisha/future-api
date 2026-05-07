@@ -1,6 +1,7 @@
 package io.github.albinberisha.future.api.repository.custom.impl;
 
 import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.springframework.transaction.annotation.Transactional;
@@ -17,7 +18,7 @@ import io.github.albinberisha.future.api.repository.custom.CustomProductFilterRe
 public class CustomProductFilterRepositoryImpl extends AbstractBaseCustomRepository<ProductFilter> implements CustomProductFilterRepository {
 
 	@Override
-	public Set<ProductFilter> findByProductCategoryId(String productCategoryId, String entityGraphName) {
+	public Set<ProductFilter> findByProductCategoryId(UUID productCategoryId, String entityGraphName) {
 		return entityManager.createQuery("SELECT pf FROM ProductFilter pf WHERE pf.productCategory.id = :productCategoryId", ProductFilter.class)
 				.setParameter("productCategoryId", productCategoryId)
 				.setHint(FETCH_GRAPH, entityManager.getEntityGraph(entityGraphName))

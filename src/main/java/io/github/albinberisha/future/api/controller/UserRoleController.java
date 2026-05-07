@@ -1,6 +1,7 @@
 package io.github.albinberisha.future.api.controller;
 
 import java.util.List;
+import java.util.UUID;
 
 import jakarta.validation.Valid;
 
@@ -62,7 +63,7 @@ public class UserRoleController {
 
 	@PreAuthorize("hasAuthority('VIEW_USER_ROLE')")
 	@GetMapping("/{id}")
-	public ResponseEntity<UserRoleDto> getUserRole(Authentication authentication, @PathVariable String id) {
+	public ResponseEntity<UserRoleDto> getUserRole(Authentication authentication, @PathVariable UUID id) {
 		User authenticatedUser = (User) authentication.getPrincipal();
 		UserRole role = userRoleService.findByIdAndMerchant(id, authenticatedUser.getMerchant())
 				.orElseThrow(() -> new ApiException("User role not found"));
@@ -79,7 +80,7 @@ public class UserRoleController {
 
 	@PreAuthorize("hasAuthority('UPDATE_USER_ROLE')")
 	@PutMapping("/{id}")
-	public ResponseEntity<?> updateUserRole(Authentication authentication, @PathVariable String id, @Valid @RequestBody UserRoleUpdateRequest userRoleUpdatingRequest) {
+	public ResponseEntity<?> updateUserRole(Authentication authentication, @PathVariable UUID id, @Valid @RequestBody UserRoleUpdateRequest userRoleUpdatingRequest) {
 		User authenticatedUser = (User) authentication.getPrincipal();
 		userRoleService.update(id, authenticatedUser.getMerchant(), userRoleUpdatingRequest);
 		return ResponseEntity.ok().build();
@@ -87,7 +88,7 @@ public class UserRoleController {
 
 	@PreAuthorize("hasAuthority('DELETE_USER_ROLE')")
 	@DeleteMapping("/{id}")
-	public ResponseEntity<?> deleteUserRole(Authentication authentication, @PathVariable String id) {
+	public ResponseEntity<?> deleteUserRole(Authentication authentication, @PathVariable UUID id) {
 		User authenticatedUser = (User) authentication.getPrincipal();
 		userRoleService.deleteByIdAndMerchant(id, authenticatedUser.getMerchant());
 		return ResponseEntity.noContent().build();

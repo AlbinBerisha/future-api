@@ -1,5 +1,7 @@
 package io.github.albinberisha.future.api.repository;
 
+import java.util.UUID;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -11,6 +13,6 @@ import io.github.albinberisha.future.api.repository.custom.CustomProductCategory
  *
  */
 @Repository
-public interface ProductCategoryRepository extends JpaRepository<ProductCategory, String>, CustomProductCategoryRepository {
+public interface ProductCategoryRepository extends JpaRepository<ProductCategory, UUID>, CustomProductCategoryRepository {
 
 }

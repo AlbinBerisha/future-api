@@ -3,6 +3,7 @@ package io.github.albinberisha.future.api.repository.custom;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -24,7 +25,7 @@ public abstract class AbstractBaseCustomRepository<T> implements CustomRepositor
 	}
 
 	@Override
-	public Optional<T> findById(String id, String entityGraphName) {
+	public Optional<T> findById(UUID id, String entityGraphName) {
 		Map<String, Object> hints = Map.of(FETCH_GRAPH, entityManager.getEntityGraph(entityGraphName));
 		return Optional.ofNullable(entityManager.find(getEntityClass(), id, hints));
 	}

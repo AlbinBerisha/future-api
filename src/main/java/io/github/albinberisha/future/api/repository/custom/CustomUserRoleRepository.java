@@ -2,6 +2,7 @@ package io.github.albinberisha.future.api.repository.custom;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import io.github.albinberisha.future.api.entity.Merchant;
 import io.github.albinberisha.future.api.entity.UserRole;
@@ -17,7 +18,7 @@ public interface CustomUserRoleRepository extends CustomRepository<UserRole> {
 
 	Optional<UserRole> findByName(String name, String entityGraphName);
 
-	Optional<UserRole> findByIdAndMerchant(String id, Merchant merchant, String entityGraphName);
+	Optional<UserRole> findByIdAndMerchant(UUID id, Merchant merchant, String entityGraphName);
 
 	List<UserRole> findByMerchantAndScope(Merchant merchant, Scope scope, String entityGraphName);
 

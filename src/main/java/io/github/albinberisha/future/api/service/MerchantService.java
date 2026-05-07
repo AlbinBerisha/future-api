@@ -3,6 +3,7 @@ package io.github.albinberisha.future.api.service;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,7 +19,6 @@ import io.github.albinberisha.future.api.exception.ApiException;
 import io.github.albinberisha.future.api.mapper.ObjectMapper;
 import io.github.albinberisha.future.api.repository.MerchantRepository;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 /**
@@ -39,7 +39,7 @@ public class MerchantService {
 		return merchantRepository.findAll();
 	}
 
-	public Optional<Merchant> findById(@NotBlank String id) {
+	public Optional<Merchant> findById(@NotNull UUID id) {
 		return merchantRepository.findById(id);
 	}
 
@@ -55,11 +55,11 @@ public class MerchantService {
 		return merchantRepository.save(merchant);
 	}
 
-	public void deleteById(@NotBlank String id) {
+	public void deleteById(@NotNull UUID id) {
 		merchantRepository.deleteById(id);
 	}
 
-	public Merchant update(@NotBlank String id, @Valid @NotNull MerchantUpdateRequest merchantUpdateRequest) {
+	public Merchant update(@NotNull UUID id, @Valid @NotNull MerchantUpdateRequest merchantUpdateRequest) {
 		Merchant merchant = merchantRepository.findById(id).orElseThrow(() -> new ApiException("Merchant not found"));
 		merchant.setName(merchantUpdateRequest.getName());
 		merchant.setDescription(merchantUpdateRequest.getDescription());

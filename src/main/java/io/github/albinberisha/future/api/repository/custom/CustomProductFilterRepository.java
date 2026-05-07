@@ -1,6 +1,7 @@
 package io.github.albinberisha.future.api.repository.custom;
 
 import java.util.Set;
+import java.util.UUID;
 
 import io.github.albinberisha.future.api.entity.ProductFilter;
 
@@ -10,6 +11,6 @@ import io.github.albinberisha.future.api.entity.ProductFilter;
  */
 public interface CustomProductFilterRepository extends CustomRepository<ProductFilter> {
 
-	Set<ProductFilter> findByProductCategoryId(String productCategoryId, String entityGraphName);
+	Set<ProductFilter> findByProductCategoryId(UUID productCategoryId, String entityGraphName);
 
 }

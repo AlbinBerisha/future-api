@@ -6,7 +6,6 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 import org.apache.commons.lang3.StringUtils;
@@ -38,7 +37,7 @@ public class ProductFilterService {
 
 	public ProductFilter save(@Valid @NotNull ProductFilterCreateRequest productFilterCreateRequest) {
 		ProductFilter productFilter = new ProductFilter();
-		productFilter.setId(UUID.randomUUID().toString());
+		productFilter.setId(UUID.randomUUID());
 		ProductCategory productCategory = productCategoryService.findById(productFilterCreateRequest.getProductCategoryId()).orElseThrow(() -> new ApiException("Product category not found"));
 		productFilter.setProductCategory(productCategory);
 		productFilter.setTranslations(productFilterCreateRequest.getNames().entrySet().stream().filter(entry -> StringUtils.isNotBlank(entry.getValue())).map(name -> {
@@ -51,7 +50,7 @@ public class ProductFilterService {
 		return productFilterRepository.save(productFilter);
 	}
 
-	public ProductFilter update(@NotBlank String id, @Valid @NotNull ProductFilterUpdateRequest productFilterUpdateRequest) {
+	public ProductFilter update(@NotNull UUID id, @Valid @NotNull ProductFilterUpdateRequest productFilterUpdateRequest) {
 		ProductFilter productFilter = productFilterRepository.findById(id)
 				.orElseThrow(() -> new ApiException("Product filter not found"));
 		productFilter.setTranslations(productFilterUpdateRequest.getNames().entrySet().stream().filter(entry -> StringUtils.isNotBlank(entry.getValue())).map(name -> {
@@ -63,15 +62,15 @@ public class ProductFilterService {
 		return productFilterRepository.save(productFilter);
 	}
 
-	public Set<ProductFilter> findByProductCategoryId(@NotBlank String productCategoryId) {
+	public Set<ProductFilter> findByProductCategoryId(@NotNull UUID productCategoryId) {
 		return productFilterRepository.findByProductCategoryId(productCategoryId, PRODUCT_FILTER_WITH_ALL);
 	}
 
-	public Optional<ProductFilter> findById(@NotBlank String id) {
+	public Optional<ProductFilter> findById(@NotNull UUID id) {
 		return productFilterRepository.findById(id, PRODUCT_FILTER_WITH_ALL);
 	}
 
-	public void deleteById(@NotBlank String id) {
+	public void deleteById(@NotNull UUID id) {
 		productFilterRepository.deleteById(id);
 	}
 }

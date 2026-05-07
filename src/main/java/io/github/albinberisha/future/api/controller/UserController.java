@@ -1,6 +1,7 @@
 package io.github.albinberisha.future.api.controller;
 
 import java.util.List;
+import java.util.UUID;
 
 import jakarta.validation.Valid;
 
@@ -58,7 +59,7 @@ public class UserController {
 
 	@PreAuthorize("hasAuthority('VIEW_USER')")
 	@GetMapping("/{id}")
-	public ResponseEntity<UserDto> getUser(Authentication authentication, @PathVariable String id) {
+	public ResponseEntity<UserDto> getUser(Authentication authentication, @PathVariable UUID id) {
 		User authenticatedUser = (User) authentication.getPrincipal();
 		Scope scope = authenticatedUser.getRole().getScope();
 		User user = null;
@@ -81,7 +82,7 @@ public class UserController {
 
 	@PreAuthorize("hasAuthority('UPDATE_USER')")
 	@PutMapping("/{id}")
-	public ResponseEntity<UserDto> updateUser(Authentication authentication, @PathVariable String id, @Valid @RequestBody UserUpdateRequest userUpdateRequest) {
+	public ResponseEntity<UserDto> updateUser(Authentication authentication, @PathVariable UUID id, @Valid @RequestBody UserUpdateRequest userUpdateRequest) {
 		User authenticatedUser = (User) authentication.getPrincipal();
 		User user = userService.update(id, userUpdateRequest, authenticatedUser);
 		return ResponseEntity.ok(objectMapper.toUserDto(user));
@@ -89,7 +90,7 @@ public class UserController {
 
 	@PreAuthorize("hasAuthority('DELETE_USER')")
 	@DeleteMapping("/{id}")
-	public ResponseEntity<?> deleteUser(Authentication authentication, @PathVariable String id) {
+	public ResponseEntity<?> deleteUser(Authentication authentication, @PathVariable UUID id) {
 		User authenticatedUser = (User) authentication.getPrincipal();
 		if (authenticatedUser.getId().equals(id))
 			throw new ApiException("User cannot be deleted");

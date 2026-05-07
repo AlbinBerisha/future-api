@@ -3,6 +3,7 @@ package io.github.albinberisha.future.api.controller;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
@@ -44,14 +45,14 @@ public class FileResourceController {
 	}
 
 	@GetMapping("/{id}/meta")
-	public ResponseEntity<FileResourceDto> getById(@PathVariable String id) {
+	public ResponseEntity<FileResourceDto> getById(@PathVariable UUID id) {
 		FileResource resource = fileResourceService.findById(id)
 				.orElseThrow(() -> new RuntimeException("Resource not found"));
 		return ResponseEntity.ok(objectMapper.toFileResourceDto(resource));
 	}
 
 	@GetMapping("/{id}")
-	public ResponseEntity<?> download(@PathVariable String id) {
+	public ResponseEntity<?> download(@PathVariable UUID id) {
 		FileResource resource = fileResourceService.findById(id)
 				.orElseThrow(() -> new RuntimeException("File not found"));
 
@@ -77,7 +78,7 @@ public class FileResourceController {
 	}
 
 	@DeleteMapping("/{id}")
-	public ResponseEntity<Void> delete(@PathVariable String id) {
+	public ResponseEntity<Void> delete(@PathVariable UUID id) {
 		fileResourceService.deleteById(id);
 		return ResponseEntity.noContent().build();
 	}

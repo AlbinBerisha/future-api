@@ -1,5 +1,7 @@
 package io.github.albinberisha.future.api.dto;
 
+import java.util.UUID;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
@@ -12,26 +14,26 @@ import jakarta.validation.constraints.NotEmpty;
  */
 @JsonInclude(Include.NON_NULL)
 public class ProductAttributeDto {
-	private String id;
+	private UUID id;
 	@NotEmpty
-	private String productFilterId;
+	private UUID productFilterId;
 	private ProductFilterDto productFilter;
 	@NotBlank
 	private String value;
 
-	public String getId() {
+	public UUID getId() {
 		return id;
 	}
 
-	public void setId(String id) {
+	public void setId(UUID id) {
 		this.id = id;
 	}
 
-	public String getProductFilterId() {
+	public UUID getProductFilterId() {
 		return productFilterId;
 	}
 
-	public void setProductFilterId(String productFilterId) {
+	public void setProductFilterId(UUID productFilterId) {
 		this.productFilterId = productFilterId;
 	}
 
