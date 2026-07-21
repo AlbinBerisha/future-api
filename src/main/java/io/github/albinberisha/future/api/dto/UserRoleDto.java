@@ -10,7 +10,7 @@ import io.github.albinberisha.future.api.entity.enums.Scope;
 import io.github.albinberisha.future.api.entity.enums.UserPermission;
 
 /**
- * @author Albin Berisha <albin199915@gmail.com>
+ * @author Albin Berisha
  *
  */
 @JsonInclude(Include.NON_NULL)

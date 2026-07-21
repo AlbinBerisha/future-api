@@ -25,7 +25,7 @@ import io.github.albinberisha.future.api.service.UserService;
 import io.github.albinberisha.future.api.util.JwtUtils;
 
 /**
- * @author Albin Berisha <albin199915@gmail.com>
+ * @author Albin Berisha
  *
  */
 @RestController

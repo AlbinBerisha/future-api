@@ -9,7 +9,7 @@ import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 
 /**
- * @author Albin Berisha <albin199915@gmail.com>
+ * @author Albin Berisha
  *
  */
 @Embeddable

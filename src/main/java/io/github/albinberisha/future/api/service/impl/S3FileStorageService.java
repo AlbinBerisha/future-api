@@ -6,7 +6,7 @@ import java.io.InputStream;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Profile;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.multipart.MultipartFile;
@@ -21,13 +21,13 @@ import software.amazon.awssdk.services.s3.presigner.S3Presigner;
 import software.amazon.awssdk.services.s3.presigner.model.GetObjectPresignRequest;
 
 /**
- * @author Albin Berisha <albin199915@gmail.com>
+ * @author Albin Berisha
  *
  */
 @Service
 @Validated
 @Qualifier("s3FileStorageService")
-@Profile("!local")
+@ConditionalOnProperty(name = "storage.provider", havingValue = "S3")
 public class S3FileStorageService implements FileStorageService {
 	@Autowired
 	private S3Client s3Client;

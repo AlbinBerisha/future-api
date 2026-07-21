@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import io.github.albinberisha.future.api.repository.UserRepository;
 
 /**
- * @author Albin Berisha <albin199915@gmail.com>
+ * @author Albin Berisha
  *
  */
 @Service

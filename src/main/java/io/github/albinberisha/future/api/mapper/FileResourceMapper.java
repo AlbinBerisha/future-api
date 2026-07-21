@@ -6,7 +6,7 @@ import io.github.albinberisha.future.api.dto.FileResourceDto;
 import io.github.albinberisha.future.api.entity.FileResource;
 
 /**
- * @author Albin Berisha <albin199915@gmail.com>
+ * @author Albin Berisha
  *
  */
 public interface FileResourceMapper {

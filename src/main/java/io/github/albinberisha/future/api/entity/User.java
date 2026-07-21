@@ -20,7 +20,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 /**
- * @author Albin Berisha <albin199915@gmail.com>
+ * @author Albin Berisha
  *
  */
 @NamedEntityGraph(
@@ -37,7 +37,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 		}
 )
 @Entity
-@Table(name = "user")
+@Table(name = "\"user\"")
 public class User implements UserDetails {
 	/**
 	 * 

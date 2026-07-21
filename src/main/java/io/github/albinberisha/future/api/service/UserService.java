@@ -26,7 +26,7 @@ import io.github.albinberisha.future.api.mapper.ObjectMapper;
 import io.github.albinberisha.future.api.repository.UserRepository;
 
 /**
- * @author Albin Berisha <albin199915@gmail.com>
+ * @author Albin Berisha
  *
  */
 @Service

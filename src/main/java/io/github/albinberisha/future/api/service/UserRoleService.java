@@ -22,7 +22,7 @@ import io.github.albinberisha.future.api.exception.ApiException;
 import io.github.albinberisha.future.api.repository.UserRoleRepository;
 
 /**
- * @author Albin Berisha <albin199915@gmail.com>
+ * @author Albin Berisha
  *
  */
 @Service

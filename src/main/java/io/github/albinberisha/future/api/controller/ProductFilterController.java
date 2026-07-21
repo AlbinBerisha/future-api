@@ -24,7 +24,7 @@ import io.github.albinberisha.future.api.mapper.ObjectMapper;
 import io.github.albinberisha.future.api.service.ProductFilterService;
 
 /**
- * @author Albin Berisha <albin199915@gmail.com>
+ * @author Albin Berisha
  *
  */
 @RequestMapping("/api/product-filters")

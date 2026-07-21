@@ -22,12 +22,12 @@ import org.springframework.web.multipart.MultipartFile;
 
 import io.github.albinberisha.future.api.dto.FileResourceDto;
 import io.github.albinberisha.future.api.entity.FileResource;
-import io.github.albinberisha.future.api.entity.enums.StorageType;
+import io.github.albinberisha.future.api.entity.enums.StorageProvider;
 import io.github.albinberisha.future.api.mapper.ObjectMapper;
 import io.github.albinberisha.future.api.service.FileResourceService;
 
 /**
- * @author Albin Berisha <albin199915@gmail.com>
+ * @author Albin Berisha
  *
  */
 @RequestMapping("/api/files")
@@ -56,7 +56,7 @@ public class FileResourceController {
 		FileResource resource = fileResourceService.findById(id)
 				.orElseThrow(() -> new RuntimeException("File not found"));
 
-		if (resource.getStorageType() == StorageType.S3) {
+		if (resource.getStorageProvider() == StorageProvider.S3) {
 			String url = fileResourceService.getDownloadUrl(id);
 			return ResponseEntity.status(HttpStatus.FOUND)
 					.location(URI.create(url))

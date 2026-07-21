@@ -9,7 +9,7 @@ import java.util.Set;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
@@ -17,16 +17,15 @@ import org.springframework.web.multipart.MultipartFile;
 
 import io.github.albinberisha.future.api.entity.FileResource;
 import io.github.albinberisha.future.api.entity.enums.ResourceOwnerType;
-import io.github.albinberisha.future.api.entity.enums.StorageType;
+import io.github.albinberisha.future.api.entity.enums.StorageProvider;
 import io.github.albinberisha.future.api.exception.ApiException;
 import io.github.albinberisha.future.api.repository.FileResourceRepository;
-import io.jsonwebtoken.lang.Arrays;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 
 /**
- * @author Albin Berisha <albin199915@gmail.com>
+ * @author Albin Berisha
  *
  */
 @Service
@@ -36,8 +35,8 @@ public class FileResourceService {
 	private FileResourceRepository fileResourceRepository;
 	@Autowired
 	private FileStorageService fileStorageService;
-	@Autowired
-	private Environment environment;
+	@Value("${storage.provider}")
+	private StorageProvider storageProvider;
 
 	public Optional<FileResource> findById(@NotNull UUID id) {
 		return fileResourceRepository.findById(id);
@@ -57,7 +56,7 @@ public class FileResourceService {
 			String storedPath = fileStorageService.upload(path, file);
 			FileResource resource = new FileResource();
 			resource.setPath(storedPath);
-			resource.setStorageType(Arrays.asList(environment.getActiveProfiles()).contains("local") ? StorageType.FTP : StorageType.S3);
+			resource.setStorageProvider(storageProvider);
 			resource.setOriginalFilename(file.getOriginalFilename());
 			resource.setContentType(file.getContentType());
 			resource.setFileSize(file.getSize());
@@ -96,7 +95,7 @@ public class FileResourceService {
 	public String getDownloadUrl(@NotNull UUID id) {
 		FileResource resource = fileResourceRepository.findById(id)
 				.orElseThrow(() -> new ApiException("Resource not found"));
-		if (resource.getStorageType() != StorageType.S3) {
+		if (resource.getStorageProvider() != StorageProvider.S3) {
 			throw new ApiException("Direct URL not available for this storage type");
 		}
 		return fileStorageService.generateDownloadUrl(resource.getPath());

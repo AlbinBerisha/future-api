@@ -7,15 +7,16 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 
 /**
- * @author Albin Berisha <albin199915@gmail.com>
+ * @author Albin Berisha
  *
  */
 @JsonInclude(Include.NON_NULL)
 public class ProductAttributeDto {
 	private UUID id;
-	@NotEmpty
+	@NotNull
 	private UUID productFilterId;
 	private ProductFilterDto productFilter;
 	@NotBlank

@@ -16,7 +16,7 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import io.github.albinberisha.future.api.dto.ErrorResponse;
 
 /**
- * @author Albin Berisha <albin199915@gmail.com>
+ * @author Albin Berisha
  *
  */
 @RestControllerAdvice

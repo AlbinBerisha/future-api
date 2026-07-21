@@ -3,7 +3,7 @@ package io.github.albinberisha.future.api.dto;
 import java.util.UUID;
 
 /**
- * @author Albin Berisha <albin199915@gmail.com>
+ * @author Albin Berisha
  *
  */
 public class UserUpdateRequest {

@@ -27,7 +27,7 @@ import io.github.albinberisha.future.api.service.MerchantService;
 import jakarta.validation.Valid;
 
 /**
- * @author Albin Berisha <albin199915@gmail.com>
+ * @author Albin Berisha
  *
  */
 @RequestMapping("/api/merchants")

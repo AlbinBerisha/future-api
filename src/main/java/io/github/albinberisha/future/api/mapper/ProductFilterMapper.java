@@ -14,7 +14,7 @@ import io.github.albinberisha.future.api.entity.ProductFilter;
 import io.github.albinberisha.future.api.entity.embeddable.ProductFilterTranslations;
 
 /**
- * @author Albin Berisha <albin199915@gmail.com>
+ * @author Albin Berisha
  *
  */
 public interface ProductFilterMapper {

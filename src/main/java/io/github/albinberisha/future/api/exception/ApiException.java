@@ -3,7 +3,7 @@ package io.github.albinberisha.future.api.exception;
 import org.springframework.http.HttpStatus;
 
 /**
- * @author Albin Berisha <albin199915@gmail.com>
+ * @author Albin Berisha
  *
  */
 public class ApiException extends RuntimeException {

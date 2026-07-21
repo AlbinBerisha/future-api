@@ -5,17 +5,17 @@ import java.util.UUID;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
-import io.github.albinberisha.future.api.entity.enums.StorageType;
+import io.github.albinberisha.future.api.entity.enums.StorageProvider;
 
 /**
- * @author Albin Berisha <albin199915@gmail.com>
+ * @author Albin Berisha
  *
  */
 @JsonInclude(Include.NON_NULL)
 public class FileResourceDto {
 	private UUID id;
 	private String path;
-	private StorageType storageType;
+	private StorageProvider storageType;
 	private String originalFilename;
 	private String contentType;
 	private Long fileSize;
@@ -36,11 +36,11 @@ public class FileResourceDto {
 		this.path = path;
 	}
 
-	public StorageType getStorageType() {
+	public StorageProvider getStorageType() {
 		return storageType;
 	}
 
-	public void setStorageType(StorageType storageType) {
+	public void setStorageType(StorageProvider storageType) {
 		this.storageType = storageType;
 	}
 

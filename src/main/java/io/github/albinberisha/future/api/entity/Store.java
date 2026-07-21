@@ -17,7 +17,7 @@ import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 
 /**
- * @author Albin Berisha <albin199915@gmail.com>
+ * @author Albin Berisha
  *
  */
 @NamedEntityGraph(name = "Store.withAll", includeAllAttributes = true)

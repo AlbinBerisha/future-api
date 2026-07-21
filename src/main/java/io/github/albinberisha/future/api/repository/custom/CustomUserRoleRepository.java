@@ -9,7 +9,7 @@ import io.github.albinberisha.future.api.entity.UserRole;
 import io.github.albinberisha.future.api.entity.enums.Scope;
 
 /**
- * @author Albin Berisha <albin199915@gmail.com>
+ * @author Albin Berisha
  *
  */
 public interface CustomUserRoleRepository extends CustomRepository<UserRole> {

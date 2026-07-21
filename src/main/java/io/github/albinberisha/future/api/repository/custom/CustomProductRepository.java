@@ -6,7 +6,7 @@ import io.github.albinberisha.future.api.entity.Merchant;
 import io.github.albinberisha.future.api.entity.Product;
 
 /**
- * @author Albin Berisha <albin199915@gmail.com>
+ * @author Albin Berisha
  *
  */
 public interface CustomProductRepository extends CustomRepository<Product> {

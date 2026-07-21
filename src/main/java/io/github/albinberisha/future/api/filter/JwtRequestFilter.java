@@ -21,7 +21,7 @@ import io.github.albinberisha.future.api.util.JwtUtils;
 import io.jsonwebtoken.ExpiredJwtException;
 
 /**
- * @author Albin Berisha <albin199915@gmail.com>
+ * @author Albin Berisha
  *
  */
 @Component

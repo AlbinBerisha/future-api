@@ -14,7 +14,7 @@ import io.github.albinberisha.future.api.entity.ProductCategory;
 import io.github.albinberisha.future.api.entity.embeddable.ProductCategoryTranslations;
 
 /**
- * @author Albin Berisha <albin199915@gmail.com>
+ * @author Albin Berisha
  *
  */
 public interface ProductCategoryMapper {

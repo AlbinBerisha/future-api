@@ -10,7 +10,7 @@ import io.github.albinberisha.future.api.entity.UserRole;
 import io.github.albinberisha.future.api.repository.custom.CustomUserRoleRepository;
 
 /**
- * @author Albin Berisha <albin199915@gmail.com>
+ * @author Albin Berisha
  *
  */
 @Repository

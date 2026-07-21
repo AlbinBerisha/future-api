@@ -5,7 +5,7 @@ import java.util.Optional;
 import io.github.albinberisha.future.api.entity.ProductCategory;
 
 /**
- * @author Albin Berisha <albin199915@gmail.com>
+ * @author Albin Berisha
  *
  */
 public interface CustomProductCategoryRepository extends CustomRepository<ProductCategory> {

@@ -30,7 +30,7 @@ import io.github.albinberisha.future.api.service.ProductCategoryService;
 import io.github.albinberisha.future.api.service.ProductFilterService;
 
 /**
- * @author Albin Berisha <albin199915@gmail.com>
+ * @author Albin Berisha
  *
  */
 @RequestMapping("/api/product-categories")

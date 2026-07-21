@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 import io.github.albinberisha.future.api.entity.enums.ResourceOwnerType;
-import io.github.albinberisha.future.api.entity.enums.StorageType;
+import io.github.albinberisha.future.api.entity.enums.StorageProvider;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -15,7 +15,7 @@ import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 
 /**
- * @author Albin Berisha <albin199915@gmail.com>
+ * @author Albin Berisha
  *
  */
 @NamedEntityGraph(name = "FileResource.withAll", includeAllAttributes = true)
@@ -43,8 +43,8 @@ public class FileResource {
 	@Column(name = "path", length = 500, nullable = false)
 	private String path;
 	@Enumerated(EnumType.STRING)
-	@Column(name = "storage_type", length = 10, nullable = false)
-	private StorageType storageType;
+	@Column(name = "storage_provider", length = 10, nullable = false)
+	private StorageProvider storageProvider;
 
 	public UUID getId() {
 		return id;
@@ -118,12 +118,12 @@ public class FileResource {
 		this.path = path;
 	}
 
-	public StorageType getStorageType() {
-		return storageType;
+	public StorageProvider getStorageProvider() {
+		return storageProvider;
 	}
 
-	public void setStorageType(StorageType storageType) {
-		this.storageType = storageType;
+	public void setStorageProvider(StorageProvider storageProvider) {
+		this.storageProvider = storageProvider;
 	}
 
 	@PrePersist

@@ -12,7 +12,7 @@ import io.github.albinberisha.future.api.entity.FileResource;
 import io.github.albinberisha.future.api.entity.enums.ResourceOwnerType;
 
 /**
- * @author Albin Berisha <albin199915@gmail.com>
+ * @author Albin Berisha
  *
  */
 @Repository

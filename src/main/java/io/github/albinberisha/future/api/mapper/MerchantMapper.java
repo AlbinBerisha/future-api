@@ -11,7 +11,7 @@ import io.github.albinberisha.future.api.dto.MerchantDto;
 import io.github.albinberisha.future.api.entity.Merchant;
 
 /**
- * @author Albin Berisha <albin199915@gmail.com>
+ * @author Albin Berisha
  *
  */
 public interface MerchantMapper {

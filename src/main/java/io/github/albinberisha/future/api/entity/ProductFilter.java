@@ -22,7 +22,7 @@ import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 
 /**
- * @author Albin Berisha <albin199915@gmail.com>
+ * @author Albin Berisha
  *
  */
 @NamedEntityGraph(name = "ProductFilter.withAll", includeAllAttributes = true)

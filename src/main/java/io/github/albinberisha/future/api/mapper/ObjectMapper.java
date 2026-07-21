@@ -3,7 +3,7 @@ package io.github.albinberisha.future.api.mapper;
 import org.mapstruct.Mapper;
 
 /**
- * @author Albin Berisha <albin199915@gmail.com>
+ * @author Albin Berisha
  *
  */
 @Mapper(componentModel = "spring")

@@ -1,6 +1,9 @@
 package io.github.albinberisha.future.api.config;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -20,7 +23,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import io.github.albinberisha.future.api.filter.JwtRequestFilter;
 
 /**
- * @author Albin Berisha <albin199915@gmail.com>
+ * @author Albin Berisha
  *
  */
 @SuppressWarnings("deprecation")
@@ -31,6 +34,8 @@ public class WebSecurityConfig {
 	private JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
 	@Autowired
 	private JwtRequestFilter jwtRequestFilter;
+	@Value("${cors.allowed-origins}")
+	private List<String> allowedOrigins;
 
 	@Bean
 	SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -62,7 +67,7 @@ public class WebSecurityConfig {
 	@Bean
 	CorsConfigurationSource corsConfigurationSource() {
 		CorsConfiguration config = new CorsConfiguration();
-		config.addAllowedOrigin("http://localhost:3000");
+		config.setAllowedOrigins(allowedOrigins);
 		config.addAllowedHeader("*");
 		config.addAllowedMethod("*");
 		config.setAllowCredentials(true);

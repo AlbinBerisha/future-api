@@ -8,7 +8,7 @@ import io.github.albinberisha.future.api.dto.ProductVariantDto;
 import io.github.albinberisha.future.api.entity.ProductVariant;
 
 /**
- * @author Albin Berisha <albin199915@gmail.com>
+ * @author Albin Berisha
  *
  */
 public interface ProductVariantMapper {

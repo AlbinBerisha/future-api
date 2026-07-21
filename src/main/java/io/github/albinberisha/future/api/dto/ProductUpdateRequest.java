@@ -7,7 +7,7 @@ import java.util.UUID;
 import jakarta.validation.Valid;
 
 /**
- * @author Albin Berisha <albin199915@gmail.com>
+ * @author Albin Berisha
  *
  */
 public class ProductUpdateRequest {

@@ -15,7 +15,7 @@ import java.util.function.Function;
 import javax.crypto.SecretKey;
 
 /**
- * @author Albin Berisha <albin199915@gmail.com>
+ * @author Albin Berisha
  *
  */
 @Component

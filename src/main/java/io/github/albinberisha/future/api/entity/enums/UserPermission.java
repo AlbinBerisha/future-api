@@ -5,7 +5,7 @@ import java.util.List;
 import io.jsonwebtoken.lang.Arrays;
 
 /**
- * @author Albin Berisha <albin199915@gmail.com>
+ * @author Albin Berisha
  *
  */
 public enum UserPermission {

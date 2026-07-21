@@ -6,7 +6,7 @@ import io.github.albinberisha.future.api.entity.enums.UserPermission;
 import jakarta.validation.constraints.NotNull;
 
 /**
- * @author Albin Berisha <albin199915@gmail.com>
+ * @author Albin Berisha
  *
  */
 public class UserRoleUpdateRequest {

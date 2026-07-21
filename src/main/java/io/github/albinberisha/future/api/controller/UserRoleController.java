@@ -33,7 +33,7 @@ import io.github.albinberisha.future.api.mapper.ObjectMapper;
 import io.github.albinberisha.future.api.service.UserRoleService;
 
 /**
- * @author Albin Berisha <albin199915@gmail.com>
+ * @author Albin Berisha
  *
  */
 @RequestMapping("/api/user-roles")

@@ -1,6 +1,7 @@
 package io.github.albinberisha.future.api.config;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -12,10 +13,11 @@ import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.presigner.S3Presigner;
 
 /**
- * @author Albin Berisha <albin199915@gmail.com>
+ * @author Albin Berisha
  *
  */
 @Configuration
+@ConditionalOnProperty(name = "storage.provider", havingValue = "S3")
 public class AwsConfig {
 	@Value("${aws.access.key}")
 	private String accessKey;

@@ -13,7 +13,7 @@ import io.github.albinberisha.future.api.entity.Store;
 import io.github.albinberisha.future.api.repository.custom.CustomStoreRepository;
 
 /**
- * @author Albin Berisha <albin199915@gmail.com>
+ * @author Albin Berisha
  *
  */
 @Repository
